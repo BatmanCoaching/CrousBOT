@@ -37,14 +37,14 @@ const CONFIG = {
   JAIL_DURATION_MS:       5 * 60 * 1000,
   JAIL_PROTECTED_ROLE_IDS: [],
 
-  // â”€â”€ RATING SYSTÈME â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── RATING SYSTÈME ──────────────────────────────────────────
   RATING_ROLE_ID: '1490645216192102421',
 
-  // â”€â”€ JSONBIN CONFIG â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── JSONBIN CONFIG ───────────────────────────────────────────
   JSONBIN_MASTER_KEY: process.env.JSONBIN_MASTER_KEY || '$2a$10$AwINYOxVh1uCEQVco3Da1uJf/hMkwcibwHt7r5CVoUsEbC36wGr8u',
   JSONBIN_BIN_ID:     process.env.JSONBIN_BIN_ID     || '',
 
-  // â”€â”€ VÉRIFICATION MANUELLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── VÉRIFICATION MANUELLE ────────────────────────────────────
   // Configure via !verif-setup ou directement ici :
   // VERIF_PENDING_ROLE_ID : rôle donné après réaction (accès channel vérif uniquement)
   // VERIF_APPROVED_ROLE_ID : rôle final après approbation admin (accès complet serveur)
@@ -107,7 +107,7 @@ function saveJSON(file, data) {
 }
 
 // ============================================================
-//  JSONBIN â€” BASE DE DONNÉES EN LIGNE
+//  JSONBIN — BASE DE DONNÉES EN LIGNE
 // ============================================================
 
 let _binId = CONFIG.JSONBIN_BIN_ID || loadJSON(FILES.jsonbinId, {}).id || '';
@@ -136,7 +136,7 @@ async function jsonbinGet() {
 
 async function jsonbinSet(data) {
   if (!CONFIG.JSONBIN_MASTER_KEY) {
-    console.warn('[JSONBIN] Pas de Master Key configurée â€” données non sauvegardées en ligne.');
+    console.warn('[JSONBIN] Pas de Master Key configurée — données non sauvegardées en ligne.');
     return;
   }
   if (!_binId) {
@@ -218,7 +218,7 @@ let npcList           = loadJSON(FILES.npcList,        {});
 let tfList            = loadJSON(FILES.tfList,         {});
 let tournamentsData   = loadJSON(FILES.tournaments,    {});
 
-// â”€â”€ VÉRIFICATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── VÉRIFICATION ──────────────────────────────────────────────
 let verifConfig   = loadJSON(FILES.verifConfig, {
   pendingRoleId:  CONFIG.VERIF_PENDING_ROLE_ID  || '',
   approvedRoleId: CONFIG.VERIF_APPROVED_ROLE_ID || '',
@@ -254,12 +254,12 @@ function saveNpcList()        { saveJSON(FILES.npcList,       npcList); }
 function saveTfList()         { saveJSON(FILES.tfList,        tfList); }
 function saveTournaments()    { saveJSON(FILES.tournaments,   tournamentsData); }
 
-// â”€â”€ LIKE AUTO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── LIKE AUTO ─────────────────────────────────────────────────
 // ID du membre dont TOUS les messages sont likés automatiquement
 const LIKE_TARGET_USER_ID = '980099925071241227';
 let likeEnabled = false;   // activé/désactivé via !like-enable / !like-disable
 
-// â”€â”€ SONDAGES EN COURS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── SONDAGES EN COURS ────────────────────────────────────────
 // { messageId: { question, options: [{label, votes}], voters: Set } }
 const activeSondages = {};
 
@@ -302,7 +302,7 @@ async function logSanction(guild, fields, title, color = '#FF4444') {
 }
 
 // ============================================================
-//  VÉRIFICATION â€” HELPER PRINCIPAL
+//  VÉRIFICATION — HELPER PRINCIPAL
 // ============================================================
 
 /**
@@ -317,8 +317,8 @@ function accountAgeDays(userId) {
  * Formate une durée en "X ans Y mois Z jours" pour l'affichage
  */
 function formatAge(days) {
-  if (days < 1)   return '< 1 jour ðŸš¨';
-  if (days < 7)   return `${days} jours ðŸš¨`;
+  if (days < 1)   return '< 1 jour 🚨';
+  if (days < 7)   return `${days} jours 🚨`;
   if (days < 30)  return `${days} jours âš ï¸`;
   if (days < 365) return `${Math.floor(days / 30)} mois ${days % 30} jours`;
   const years  = Math.floor(days / 365);
@@ -357,19 +357,19 @@ async function sendVerifRequest(guild, member) {
   const embedColor = isSuspect ? '#FF0000' : ageDays < 30 ? '#FFA500' : '#00C851';
 
   const flags = [];
-  if (isSuspect) flags.push('ðŸš¨ **COMPTE RÉCENT** (< 7 jours)');
+  if (isSuspect) flags.push('🚨 **COMPTE RÉCENT** (< 7 jours)');
   if (!hasAvatar) flags.push('âš ï¸ Pas d\'avatar (compte par défaut)');
-  if (mfaRequired) flags.push('â„¹ï¸ Le serveur requiert la A2F');
+  if (mfaRequired) flags.push('ℹï¸ Le serveur requiert la A2F');
 
-  const flagsStr = flags.length > 0 ? flags.join('\n') : 'âœ… Aucun signal suspect';
+  const flagsStr = flags.length > 0 ? flags.join('\n') : '✅ Aucun signal suspect';
 
   const verifEmbed = new EmbedBuilder()
     .setColor(embedColor)
-    .setTitle(`${isSuspect ? 'ðŸš¨' : 'ðŸ”'} Demande de vérification`)
+    .setTitle(`${isSuspect ? '🚨' : 'ðŸ”'} Demande de vérification`)
     .setThumbnail(avatarUrl)
     .addFields(
       {
-        name: 'ðŸ‘¤ Identité',
+        name: '👤 Identité',
         value: [
           `**Pseudo** : ${member.user.tag}`,
           `**Surnom** : ${member.nickname || '*aucun*'}`,
@@ -379,7 +379,7 @@ async function sendVerifRequest(guild, member) {
         inline: false,
       },
       {
-        name: 'ðŸ“… Dates',
+        name: '📅 Dates',
         value: [
           `**Compte créé le** : ${createdStr}`,
           `**Âge du compte** : ${ageStr}`,
@@ -388,29 +388,29 @@ async function sendVerifRequest(guild, member) {
         inline: false,
       },
       {
-        name: 'ðŸ›¡ï¸ Signaux de sécurité',
+        name: '🛡ï¸ Signaux de sécurité',
         value: flagsStr,
         inline: false,
       },
       {
-        name: 'ðŸŽ­ Avatar',
+        name: '🎭 Avatar',
         value: hasAvatar ? `[Voir l'avatar](${avatarUrl})` : 'âŒ Avatar par défaut Discord',
         inline: true,
       },
       {
-        name: 'ðŸ¤– Bot ?',
-        value: member.user.bot ? 'âœ… Oui (BOT)' : 'âŒ Non',
+        name: '🤖 Bot ?',
+        value: member.user.bot ? '✅ Oui (BOT)' : 'âŒ Non',
         inline: true,
       },
     )
-    .setFooter({ text: `Demande reçue Â· ID ${member.id}` })
+    .setFooter({ text: `Demande reçue · ID ${member.id}` })
     .setTimestamp();
 
   // Boutons admin
   const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId(`verif_approve_${member.id}`)
-      .setLabel('âœ…  Approuver')
+      .setLabel('✅  Approuver')
       .setStyle(ButtonStyle.Success),
     new ButtonBuilder()
       .setCustomId(`verif_refuse_${member.id}`)
@@ -418,7 +418,7 @@ async function sendVerifRequest(guild, member) {
       .setStyle(ButtonStyle.Danger),
     new ButtonBuilder()
       .setCustomId(`verif_blacklist_${member.id}`)
-      .setLabel('ðŸš«  Blacklist + Kick')
+      .setLabel('🚫  Blacklist + Kick')
       .setStyle(ButtonStyle.Danger),
   );
 
@@ -459,7 +459,7 @@ async function disableVerifButtons(guild, userId, status) {
     if (!msg) return;
 
     const statusColors  = { approved: ButtonStyle.Success, refused: ButtonStyle.Secondary, blacklisted: ButtonStyle.Secondary };
-    const statusLabels  = { approved: 'âœ… Approuvé', refused: 'âŒ Refusé', blacklisted: 'ðŸš« Blacklisté' };
+    const statusLabels  = { approved: '✅ Approuvé', refused: 'âŒ Refusé', blacklisted: '🚫 Blacklisté' };
 
     const disabledRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
@@ -475,7 +475,7 @@ async function disableVerifButtons(guild, userId, status) {
 }
 
 // ============================================================
-//  HELPER â€” Met à jour l'embed du message RR
+//  HELPER — Met à jour l'embed du message RR
 // ============================================================
 
 async function updateRREmbed(targetMessage, rrEntry) {
@@ -544,7 +544,7 @@ async function unjailMember(member, savedRoleIds, reason) {
 }
 
 // ============================================================
-//  TOURNOI â€” HELPERS
+//  TOURNOI — HELPERS
 // ============================================================
 
 function shuffle(arr) {
@@ -598,206 +598,206 @@ async function sendVersus(channel, tournamentId, matchIndex, p1, p2) {
 
 const commands = {
 
-  // â”€â”€ AIDE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── AIDE ────────────────────────────────────────────────────
   '!aide': async (message) => {
     const viewRoleDisplay  = ticketConfig.viewRoleId  ? `<@&${ticketConfig.viewRoleId}>`  : '`non défini`';
     const staffRoleDisplay = ticketConfig.staffRoleId ? `<@&${ticketConfig.staffRoleId}>` : '`non défini`';
     const logChDisplay     = sanctionLogData.channelId ? `<#${sanctionLogData.channelId}>` : '`non défini`';
     const guildIcon        = message.guild.iconURL({ size: 64 }) ?? undefined;
 
-    // â”€â”€ PAGE 1 : Général & Fun â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── PAGE 1 : Général & Fun ───────────────────────────────
     const p1 = new EmbedBuilder()
       .setColor('#FF6B9D')
-      .setAuthor({ name: 'âš¡ CrousBot â€” Centre de commandes', iconURL: guildIcon })
-      .setTitle('ðŸ“– Commandes générales & Fun')
+      .setAuthor({ name: '⚡ CrousBot — Centre de commandes', iconURL: guildIcon })
+      .setTitle('📖 Commandes générales & Fun')
       .setDescription(
-        '> Préfixe : **`!`**  Â·  ðŸ”’ = admin uniquement  Â·  ðŸŽ­ = rôle requis\n' +
-        '> â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€'
+        '> Préfixe : **`!`**  ·  🔒 = admin uniquement  ·  🎭 = rôle requis\n' +
+        '> ───────────────────────────────────────────────────'
       )
       .addFields(
-        { name: 'ðŸ”¬ Études & Suppléments', value: [
-            '`!pubmed` Â· Affiche la dernière étude enregistrée',
-            '`!def-etude <titre> | <url> | <desc>` ðŸ”’ Â· Définit une étude',
-            '`!cope` Â· Liste complète des compléments classifiés',
-            '`!cope-du-jour` Â· Cope aléatoire + réfutation scientifique',
-            '`!add-cope <nom>` / `!remove-cope <nom>` ðŸ”’',
-            '`!add-interesting <nom>` / `!remove-interesting <nom>` ðŸ”’',
-            '`!set-cope-bulk <cope|interesting> | item1, item2` ðŸ”’',
+        { name: '🔬 Études & Suppléments', value: [
+            '`!pubmed` · Affiche la dernière étude enregistrée',
+            '`!def-etude <titre> | <url> | <desc>` 🔒 · Définit une étude',
+            '`!cope` · Liste complète des compléments classifiés',
+            '`!cope-du-jour` · Cope aléatoire + réfutation scientifique',
+            '`!add-cope <nom>` / `!remove-cope <nom>` 🔒',
+            '`!add-interesting <nom>` / `!remove-interesting <nom>` 🔒',
+            '`!set-cope-bulk <cope|interesting> | item1, item2` 🔒',
           ].join('\n'), inline: false },
-        { name: 'ðŸ“œ Règles', value: [
-            '`!regles` Â· Affiche toutes les règles',
-            '`!regle<N>` Â· Affiche la règle N (ex: `!regle2`)',
-            '`!set-regle <N> | <texte>` ðŸ”’ Â· Modifie une règle',
+        { name: '📜 Règles', value: [
+            '`!regles` · Affiche toutes les règles',
+            '`!regle<N>` · Affiche la règle N (ex: `!regle2`)',
+            '`!set-regle <N> | <texte>` 🔒 · Modifie une règle',
           ].join('\n'), inline: false },
-        { name: 'ðŸŽ­ Fun & Troll', value: [
-            '`!iqtest [@user]` Â· Test de QI certifié fluide',
-            '`!fluide @user` ðŸ”’ Â· Place sous système fluide 24h',
-            '`!tf @user` ðŸ”’ Â· Renomme trollement 10 min',
-            '`!npc @user` ðŸ”’ Â· Déclare NPC pour 10 min',
-            '`!resetpseudo @user` ðŸ”’ Â· Réinitialise le surnom',
-            '`!zyzz @user` ðŸ”’ Â· Accorde / retire le titre "Fils de Zyzz"',
-            '`!sondage <question> | <opt1> | <opt2> | [opt3] | [opt4]` Â· Vote public',
+        { name: '🎭 Fun & Troll', value: [
+            '`!iqtest [@user]` · Test de QI certifié fluide',
+            '`!fluide @user` 🔒 · Place sous système fluide 24h',
+            '`!tf @user` 🔒 · Renomme trollement 10 min',
+            '`!npc @user` 🔒 · Déclare NPC pour 10 min',
+            '`!resetpseudo @user` 🔒 · Réinitialise le surnom',
+            '`!zyzz @user` 🔒 · Accorde / retire le titre "Fils de Zyzz"',
+            '`!sondage <question> | <opt1> | <opt2> | [opt3] | [opt4]` · Vote public',
           ].join('\n'), inline: false },
-        { name: 'ðŸ“¡ TikTok Live', value:
-            '`!live` Â· Vérifie manuellement si @crousgainz est en live',
+        { name: '📡 TikTok Live', value:
+            '`!live` · Vérifie manuellement si @crousgainz est en live',
           inline: false },
-        { name: 'ðŸ”§ Utilitaires', value: [
-            '`!stats [@user]` Â· Fiche complète d\'un membre',
-            '`!clear <N>` ðŸ”’ Â· Supprime N messages (max 100)',
-            '`!say <#channel> | <titre> | <desc> | [couleur] | [image] | [footer]` ðŸ”’',
+        { name: '🔧 Utilitaires', value: [
+            '`!stats [@user]` · Fiche complète d\'un membre',
+            '`!clear <N>` 🔒 · Supprime N messages (max 100)',
+            '`!say <#channel> | <titre> | <desc> | [couleur] | [image] | [footer]` 🔒',
           ].join('\n'), inline: false },
       )
-      .setFooter({ text: '!aide2 â†’ Rating ELO Â· !aide3 â†’ Tournoi Â· !aide4 â†’ Modération Â· !aide5 â†’ Tickets, RR & Vérif' })
+      .setFooter({ text: '!aide2 → Rating ELO · !aide3 → Tournoi · !aide4 → Modération · !aide5 → Tickets, RR & Vérif' })
       .setTimestamp();
 
-    // â”€â”€ PAGE 2 : Rating Gymgirl â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── PAGE 2 : Rating Gymgirl ──────────────────────────────
     const p2 = new EmbedBuilder()
       .setColor('#FFD700')
-      .setAuthor({ name: 'âš¡ CrousBot â€” Centre de commandes', iconURL: guildIcon })
-      .setTitle('ðŸ† Rating Gymgirl â€” Système ELO')
+      .setAuthor({ name: '⚡ CrousBot — Centre de commandes', iconURL: guildIcon })
+      .setTitle('ðŸ† Rating Gymgirl — Système ELO')
       .setDescription(
-        '> Préfixe : **`!`**  Â·  ðŸ”’ = admin  Â·  ðŸŽ­ = rôle Rating requis\n' +
-        '> â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€'
+        '> Préfixe : **`!`**  ·  🔒 = admin  ·  🎭 = rôle Rating requis\n' +
+        '> ───────────────────────────────────────────────────'
       )
       .addFields(
-        { name: 'ðŸŽ­ Commandes publiques (rôle Rating)', value: [
-            '`!rate` Â· Lance un duel ELO entre 2 gymgirls',
-            '`!rate-top` Â· Classement ELO â€” Top 10',
+        { name: '🎭 Commandes publiques (rôle Rating)', value: [
+            '`!rate` · Lance un duel ELO entre 2 gymgirls',
+            '`!rate-top` · Classement ELO — Top 10',
           ].join('\n'), inline: false },
-        { name: 'ðŸ”’ Gestion admin', value: [
-            '`!rate-list` Â· Liste complète avec scores et IDs',
-            '`!rate-add <nom> | <url_image>` Â· Ajouter une gymgirl (ELO 1000)',
-            '`!rate-remove <nom>` Â· Retirer une gymgirl',
-            '`!rate-reset <nom>` Â· Réinitialiser l\'ELO à 1000',
-            '`!give-rating @user` Â· Donner / retirer le rôle Rating',
+        { name: '🔒 Gestion admin', value: [
+            '`!rate-list` · Liste complète avec scores et IDs',
+            '`!rate-add <nom> | <url_image>` · Ajouter une gymgirl (ELO 1000)',
+            '`!rate-remove <nom>` · Retirer une gymgirl',
+            '`!rate-reset <nom>` · Réinitialiser l\'ELO à 1000',
+            '`!give-rating @user` · Donner / retirer le rôle Rating',
           ].join('\n'), inline: false },
-        { name: 'âš™ï¸ Fonctionnement', value: [
+        { name: '⚙ï¸ Fonctionnement', value: [
             '• Chaque duel met à jour les scores ELO en temps réel **(K=32)**',
             '• Les votes durent **5 minutes** puis expirent automatiquement',
             '• Plusieurs membres peuvent voter sur le même duel',
             '• 1 seul vote par utilisateur (changement autorisé)',
-            '• Base de données stockée sur **JSONBin.io** â€” persistante cross-restart',
+            '• Base de données stockée sur **JSONBin.io** — persistante cross-restart',
           ].join('\n'), inline: false },
       )
-      .setFooter({ text: '!aide â†’ Général Â· !aide3 â†’ Tournoi Â· !aide4 â†’ Modération Â· !aide5 â†’ Tickets & Vérif' })
+      .setFooter({ text: '!aide → Général · !aide3 → Tournoi · !aide4 → Modération · !aide5 → Tickets & Vérif' })
       .setTimestamp();
 
-    // â”€â”€ PAGE 3 : Tournoi â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── PAGE 3 : Tournoi ─────────────────────────────────────
     const p3 = new EmbedBuilder()
       .setColor('#F39C12')
-      .setAuthor({ name: 'âš¡ CrousBot â€” Centre de commandes', iconURL: guildIcon })
-      .setTitle('âš”ï¸ Tournoi Physique â€” Élimination directe')
+      .setAuthor({ name: '⚡ CrousBot — Centre de commandes', iconURL: guildIcon })
+      .setTitle('⚔ï¸ Tournoi Physique — Élimination directe')
       .setDescription(
-        '> Préfixe : **`!`**  Â·  ðŸ”’ = admin uniquement\n' +
-        '> â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€'
+        '> Préfixe : **`!`**  ·  🔒 = admin uniquement\n' +
+        '> ───────────────────────────────────────────────────'
       )
       .addFields(
-        { name: 'ðŸ”’ Commandes', value: [
-            '`!tournoi-start <#channel-photos>` Â· Lance un tournoi depuis un salon photos',
-            '`!tournoi-status` Â· État du tournoi (round, matchs, qualifiés)',
-            '`!tournoi-cancel` Â· Annule le tournoi en cours',
+        { name: '🔒 Commandes', value: [
+            '`!tournoi-start <#channel-photos>` · Lance un tournoi depuis un salon photos',
+            '`!tournoi-status` · État du tournoi (round, matchs, qualifiés)',
+            '`!tournoi-cancel` · Annule le tournoi en cours',
           ].join('\n'), inline: false },
-        { name: 'âš™ï¸ Fonctionnement', value: [
+        { name: '⚙ï¸ Fonctionnement', value: [
             '**1.** Scan du salon photos (jusqu\'à 1000 messages)',
             '**2.** 1 seule photo retenue par personne (première trouvée)',
             '**3.** Matchs générés aléatoirement par paires',
             '**4.** Vote via boutons **ðŸ† Joueur A / ðŸ† Joueur B**',
-            '**5.** Le gagnant avance â€” élimination directe',
-            '**6.** Nombre impair â†’ bye automatique (passage sans match)',
+            '**5.** Le gagnant avance — élimination directe',
+            '**6.** Nombre impair → bye automatique (passage sans match)',
           ].join('\n'), inline: false },
       )
-      .setFooter({ text: '!aide â†’ Général Â· !aide2 â†’ Rating Â· !aide4 â†’ Modération Â· !aide5 â†’ Tickets & Vérif' })
+      .setFooter({ text: '!aide → Général · !aide2 → Rating · !aide4 → Modération · !aide5 → Tickets & Vérif' })
       .setTimestamp();
 
-    // â”€â”€ PAGE 4 : Modération â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── PAGE 4 : Modération ──────────────────────────────────
     const p4 = new EmbedBuilder()
       .setColor('#E74C3C')
-      .setAuthor({ name: 'âš¡ CrousBot â€” Centre de commandes', iconURL: guildIcon })
-      .setTitle('ðŸ”¨ Modération â€” Commandes admin ðŸ”’')
+      .setAuthor({ name: '⚡ CrousBot — Centre de commandes', iconURL: guildIcon })
+      .setTitle('🔨 Modération — Commandes admin 🔒')
       .setDescription(
-        '> Toutes les commandes ci-dessous sont réservées aux admins ðŸ”’\n' +
-        '> â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€'
+        '> Toutes les commandes ci-dessous sont réservées aux admins 🔒\n' +
+        '> ───────────────────────────────────────────────────'
       )
       .addFields(
         { name: 'âš ï¸ Warns', value: [
-            '`!warn @user [raison]` Â· Avertit â€” jail auto au **3ème** warn',
-            '`!warns @user` Â· Historique des warns d\'un membre',
-            '`!clearwarns @user` Â· Supprime tous les warns',
+            '`!warn @user [raison]` · Avertit — jail auto au **3ème** warn',
+            '`!warns @user` · Historique des warns d\'un membre',
+            '`!clearwarns @user` · Supprime tous les warns',
           ].join('\n'), inline: false },
-        { name: 'ðŸ”’ Jail & Mute', value: [
-            '`!jail @user` Â· Emprisonne 5 min (retire TOUS les rôles)',
-            '`!unjail @user` Â· Libère avant la fin de la peine',
-            '`!expiredjails` Â· Jails actifs avec temps restant',
-            '`!mute @user <minutes> [raison]` Â· Timeout Discord (1â€“40320 min)',
+        { name: '🔒 Jail & Mute', value: [
+            '`!jail @user` · Emprisonne 5 min (retire TOUS les rôles)',
+            '`!unjail @user` · Libère avant la fin de la peine',
+            '`!expiredjails` · Jails actifs avec temps restant',
+            '`!mute @user <minutes> [raison]` · Timeout Discord (1–40320 min)',
           ].join('\n'), inline: false },
-        { name: 'â›” Sanctions lourdes', value: [
-            '`!ban @user [raison]` Â· Bannit définitivement + supprime 7j de messages',
-            '`!source` Â· Auto-mute 10 min (règle 1 â€” sourceur détecté)',
-            '`!mk677` Â· Auto-mute 10 min (règle 1 â€” mk677 mentionné)',
+        { name: '⛔ Sanctions lourdes', value: [
+            '`!ban @user [raison]` · Bannit définitivement + supprime 7j de messages',
+            '`!source` · Auto-mute 10 min (règle 1 — sourceur détecté)',
+            '`!mk677` · Auto-mute 10 min (règle 1 — mk677 mentionné)',
           ].join('\n'), inline: false },
-        { name: 'ðŸ›¡ï¸ Anti-Badwords', value: [
-            '`!badwords-add <mot>` Â· Ajoute un mot interdit (suppression + warn auto)',
-            '`!badwords-remove <mot>` Â· Retire un mot de la liste',
-            '`!badwords-list` Â· Affiche tous les mots interdits',
+        { name: '🛡ï¸ Anti-Badwords', value: [
+            '`!badwords-add <mot>` · Ajoute un mot interdit (suppression + warn auto)',
+            '`!badwords-remove <mot>` · Retire un mot de la liste',
+            '`!badwords-list` · Affiche tous les mots interdits',
           ].join('\n'), inline: false },
-        { name: 'ðŸ“‹ Logs & Divers', value: [
-            '`!sanction-log <#channel>` Â· Définit le salon de logs',
+        { name: '📋 Logs & Divers', value: [
+            '`!sanction-log <#channel>` · Définit le salon de logs',
             `> Salon actuel : ${logChDisplay}`,
-            '`!like-enable` / `!like-disable` Â· Like auto sur cible configurée',
-            '`!annonce-dm @role | <message>` Â· DM de masse avec confirmation',
+            '`!like-enable` / `!like-disable` · Like auto sur cible configurée',
+            '`!annonce-dm @role | <message>` · DM de masse avec confirmation',
             '  > Variables : `{user}` `{server}`',
-            '`!welcome-set <#channel> | <message>` Â· Message de bienvenue auto',
+            '`!welcome-set <#channel> | <message>` · Message de bienvenue auto',
             '  > Variables : `{user}` `{server}` `{count}`',
           ].join('\n'), inline: false },
       )
-      .setFooter({ text: '!aide â†’ Général Â· !aide2 â†’ Rating Â· !aide3 â†’ Tournoi Â· !aide5 â†’ Tickets & Vérif' })
+      .setFooter({ text: '!aide → Général · !aide2 → Rating · !aide3 → Tournoi · !aide5 → Tickets & Vérif' })
       .setTimestamp();
 
-    // â”€â”€ PAGE 5 : Tickets, Reaction Roles & Vérification â”€â”€â”€â”€â”€â”€
+    // ── PAGE 5 : Tickets, Reaction Roles & Vérification ──────
     const p5 = new EmbedBuilder()
       .setColor('#2ECC71')
-      .setAuthor({ name: 'âš¡ CrousBot â€” Centre de commandes', iconURL: guildIcon })
-      .setTitle('ðŸŽ« Tickets Â· ðŸŽ­ Reaction Roles Â· âœ… Vérification')
+      .setAuthor({ name: '⚡ CrousBot — Centre de commandes', iconURL: guildIcon })
+      .setTitle('🎫 Tickets · 🎭 Reaction Roles · ✅ Vérification')
       .setDescription(
-        '> Préfixe : **`!`**  Â·  ðŸ”’ = admin uniquement\n' +
-        '> â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€'
+        '> Préfixe : **`!`**  ·  🔒 = admin uniquement\n' +
+        '> ───────────────────────────────────────────────────'
       )
       .addFields(
-        { name: 'ðŸŽ« Tickets', value: [
-            '`!ticket <motif>` Â· Ouvre un ticket privé',
-            '`!fermer` Â· Ferme le ticket (depuis le salon ticket)',
-            '`!ticket-setrole @role` ðŸ”’ Â· Rôle viewer (lecture seule)',
-            '`!ticket-setstaff @role` ðŸ”’ Â· Rôle staff (écriture)',
-            '`!ticket-config` ðŸ”’ Â· Configuration actuelle',
-            `> Viewer : ${viewRoleDisplay}  Â·  Staff : ${staffRoleDisplay}`,
+        { name: '🎫 Tickets', value: [
+            '`!ticket <motif>` · Ouvre un ticket privé',
+            '`!fermer` · Ferme le ticket (depuis le salon ticket)',
+            '`!ticket-setrole @role` 🔒 · Rôle viewer (lecture seule)',
+            '`!ticket-setstaff @role` 🔒 · Rôle staff (écriture)',
+            '`!ticket-config` 🔒 · Configuration actuelle',
+            `> Viewer : ${viewRoleDisplay}  ·  Staff : ${staffRoleDisplay}`,
           ].join('\n'), inline: false },
-        { name: 'ðŸŽ­ Reaction Roles', value: [
-            '`!rr-setup <#channel> | <titre> | <desc>` ðŸ”’ Â· Crée un message RR',
-            '`!rr-attach <msgID> <#channel> | <titre> | <desc>` ðŸ”’ Â· Attache à un existant',
-            '`!rr-add <msgID> | <emoji> | <@role>` ðŸ”’ Â· Ajoute un emoji/rôle',
-            '`!rr-remove <msgID> | <emoji>` ðŸ”’ Â· Retire un emoji/rôle',
-            '`!rr-list` ðŸ”’ Â· Liste tous les messages RR configurés',
-            '`!rr-delete <msgID>` ðŸ”’ Â· Supprime un message RR',
-            '`!clearrole` ðŸ”’ Â· Retire le rôle accès à **tous** les membres',
+        { name: '🎭 Reaction Roles', value: [
+            '`!rr-setup <#channel> | <titre> | <desc>` 🔒 · Crée un message RR',
+            '`!rr-attach <msgID> <#channel> | <titre> | <desc>` 🔒 · Attache à un existant',
+            '`!rr-add <msgID> | <emoji> | <@role>` 🔒 · Ajoute un emoji/rôle',
+            '`!rr-remove <msgID> | <emoji>` 🔒 · Retire un emoji/rôle',
+            '`!rr-list` 🔒 · Liste tous les messages RR configurés',
+            '`!rr-delete <msgID>` 🔒 · Supprime un message RR',
+            '`!clearrole` 🔒 · Retire le rôle accès à **tous** les membres',
           ].join('\n'), inline: false },
-        { name: 'âœ… Vérification manuelle', value: [
-            '`!verif-setup` ðŸ”’ Â· Assistant de configuration',
-            '`!verif-config` ðŸ”’ Â· Affiche la configuration actuelle',
-            '`!verif-enable` / `!verif-disable` ðŸ”’ Â· Active ou désactive',
-            '`!whitelist @user` ðŸ”’ Â· Approuve directement un membre',
-            '`!blacklist @user [raison]` ðŸ”’ Â· Blacklist + kick',
-            '`!unblacklist @user` ðŸ”’ Â· Retire de la blacklist',
-            '`!blacklist-list` ðŸ”’ Â· Affiche toute la blacklist',
-            '`!pending-list` ðŸ”’ Â· Liste les vérifications en attente',
+        { name: '✅ Vérification manuelle', value: [
+            '`!verif-setup` 🔒 · Assistant de configuration',
+            '`!verif-config` 🔒 · Affiche la configuration actuelle',
+            '`!verif-enable` / `!verif-disable` 🔒 · Active ou désactive',
+            '`!whitelist @user` 🔒 · Approuve directement un membre',
+            '`!blacklist @user [raison]` 🔒 · Blacklist + kick',
+            '`!unblacklist @user` 🔒 · Retire de la blacklist',
+            '`!blacklist-list` 🔒 · Affiche toute la blacklist',
+            '`!pending-list` 🔒 · Liste les vérifications en attente',
           ].join('\n'), inline: false },
-        { name: 'âš™ï¸ Sécurité automatique', value: [
-            '• Comptes blacklistés â†’ rejetés automatiquement à la réaction',
-            '• Comptes **< 7 jours** â†’ signalés en rouge ðŸš¨',
-            '• Comptes **< 30 jours** â†’ signalés en orange âš ï¸',
-            '• Sans avatar â†’ signalé automatiquement',
+        { name: '⚙ï¸ Sécurité automatique', value: [
+            '• Comptes blacklistés → rejetés automatiquement à la réaction',
+            '• Comptes **< 7 jours** → signalés en rouge 🚨',
+            '• Comptes **< 30 jours** → signalés en orange âš ï¸',
+            '• Sans avatar → signalé automatiquement',
           ].join('\n'), inline: false },
       )
-      .setFooter({ text: '!aide â†’ Général Â· !aide2 â†’ Rating Â· !aide3 â†’ Tournoi Â· !aide4 â†’ Modération' })
+      .setFooter({ text: '!aide → Général · !aide2 → Rating · !aide3 → Tournoi · !aide4 → Modération' })
       .setTimestamp();
 
     await message.reply({ embeds: [p1] });
@@ -812,7 +812,7 @@ const commands = {
   '!aide4': async (message) => { await commands['!aide'](message); },
   '!aide5': async (message) => { await commands['!aide'](message); },
 
-  // â”€â”€ ZYZZ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── ZYZZ ─────────────────────────────────────────────────────
   '!zyzz': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const target = message.mentions.members.first();
@@ -823,13 +823,13 @@ const commands = {
       delete zyzzHonors[target.id];
       saveZyzzHonors();
       try {
-        if ((target.nickname || '').startsWith('âš¡ Fils de Zyzz')) {
+        if ((target.nickname || '').startsWith('⚡ Fils de Zyzz')) {
           await target.setNickname(null, 'Retrait titre Zyzz').catch(() => {});
         }
       } catch {}
       return message.reply({ embeds: [new EmbedBuilder()
         .setColor('#95A5A6')
-        .setTitle('â˜ ï¸ Titre retiré â€” Fils de Zyzz')
+        .setTitle('â˜ ï¸ Titre retiré — Fils de Zyzz')
         .setDescription(`<@${target.id}> n'est plus un **Fils de Zyzz**.\nLe soleil s'est couché sur son physique.`)
         .addFields(
           { name: 'Titre accordé le', value: new Date(honor.at).toLocaleDateString('fr-FR'), inline: true },
@@ -843,25 +843,25 @@ const commands = {
     saveZyzzHonors();
     try {
       const base = target.nickname || target.user.username;
-      await target.setNickname(`âš¡ Fils de Zyzz | ${base}`.slice(0, 32), `Titre Zyzz par ${message.author.tag}`).catch(() => {});
+      await target.setNickname(`⚡ Fils de Zyzz | ${base}`.slice(0, 32), `Titre Zyzz par ${message.author.tag}`).catch(() => {});
     } catch {}
     await message.reply({ embeds: [new EmbedBuilder()
       .setColor('#FFD700')
-      .setTitle('âš¡ FILS DE ZYZZ â€” Titre accordé')
+      .setTitle('⚡ FILS DE ZYZZ — Titre accordé')
       .setDescription(
         `<@${target.id}> est désormais officiellement reconnu comme **Fils de Zyzz** par les dieux du physique.\n\n` +
         `*"We're all gonna make it, brah."*`
       )
       .addFields(
-        { name: 'ðŸ… Titre',        value: 'âš¡ Fils de Zyzz',             inline: true },
-        { name: 'ðŸ‘‘ Accordé par',  value: `<@${message.author.id}>`,     inline: true },
+        { name: 'ðŸ… Titre',        value: '⚡ Fils de Zyzz',             inline: true },
+        { name: '👑 Accordé par',  value: `<@${message.author.id}>`,     inline: true },
       )
       .setThumbnail(target.user.displayAvatarURL({ size: 256 }))
-      .setFooter({ text: 'Héritier de la légende Â· Physique certifié divin' })
+      .setFooter({ text: 'Héritier de la légende · Physique certifié divin' })
       .setTimestamp()] });
   },
 
-  // â”€â”€ BADWORDS-ADD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── BADWORDS-ADD ─────────────────────────────────────────────
   '!badwords-add': async (message, args) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const mot = args.join(' ').trim().toLowerCase();
@@ -871,7 +871,7 @@ const commands = {
     saveBadwords();
     await message.reply({ embeds: [new EmbedBuilder()
       .setColor('#FF4444')
-      .setTitle('â›” Mot interdit ajouté')
+      .setTitle('⛔ Mot interdit ajouté')
       .setDescription(`Le mot \`${mot}\` est maintenant interdit. Tout message le contenant sera **supprimé** et un warn sera ajouté automatiquement.`)
       .addFields(
         { name: 'Mot ajouté',      value: `\`${mot}\``,                            inline: true },
@@ -882,7 +882,7 @@ const commands = {
       .setTimestamp()] });
   },
 
-  // â”€â”€ BADWORDS-REMOVE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── BADWORDS-REMOVE ──────────────────────────────────────────
   '!badwords-remove': async (message, args) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const mot = args.join(' ').trim().toLowerCase();
@@ -893,7 +893,7 @@ const commands = {
     saveBadwords();
     await message.reply({ embeds: [new EmbedBuilder()
       .setColor('#00FF66')
-      .setTitle('âœ… Mot retiré de la liste')
+      .setTitle('✅ Mot retiré de la liste')
       .addFields(
         { name: 'Mot retiré', value: `\`${mot}\``,                            inline: true },
         { name: 'Restants',   value: `${badwordsData.words.length} mot(s)`,   inline: true },
@@ -901,25 +901,25 @@ const commands = {
       .setTimestamp()] });
   },
 
-  // â”€â”€ BADWORDS-LIST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── BADWORDS-LIST ────────────────────────────────────────────
   '!badwords-list': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     if (badwordsData.words.length === 0) {
       return message.reply({ embeds: [new EmbedBuilder()
         .setColor('#00FF66')
-        .setTitle('âœ… Aucun mot interdit configuré')
+        .setTitle('✅ Aucun mot interdit configuré')
         .setDescription('Utilise `!badwords-add <mot>` pour en ajouter.')] });
     }
     const liste = badwordsData.words.map((w, i) => `\`${String(i + 1).padStart(2, '0')}\` ||${w}||`).join('\n');
     await message.reply({ embeds: [new EmbedBuilder()
       .setColor('#FF4444')
-      .setTitle(`â›” Mots interdits â€” ${badwordsData.words.length} entrée(s)`)
+      .setTitle(`⛔ Mots interdits — ${badwordsData.words.length} entrée(s)`)
       .setDescription(liste.slice(0, 4000))
-      .setFooter({ text: 'Mots masqués (spoiler) â€” clique pour révéler Â· !badwords-add / !badwords-remove' })
+      .setFooter({ text: 'Mots masqués (spoiler) — clique pour révéler · !badwords-add / !badwords-remove' })
       .setTimestamp()] });
   },
 
-  // â”€â”€ ANNONCE-DM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── ANNONCE-DM ───────────────────────────────────────────────
   '!annonce-dm': async (message, args) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const parts = args.join(' ').split('|').map(s => s.trim());
@@ -935,13 +935,13 @@ const commands = {
       .setDescription(
         `Tu es sur le point d'envoyer un DM à **tous les membres** avec le rôle <@&${role.id}>.\n\n**Aperçu du message :**\n> ${texte.slice(0, 400)}`
       )
-      .setFooter({ text: 'Réagis âœ… pour confirmer ou âŒ pour annuler â€” 30 secondes' })] });
+      .setFooter({ text: 'Réagis ✅ pour confirmer ou âŒ pour annuler — 30 secondes' })] });
 
-    await confirmMsg.react('âœ…').catch(() => {});
+    await confirmMsg.react('✅').catch(() => {});
     await confirmMsg.react('âŒ').catch(() => {});
 
     const collected = await confirmMsg.awaitReactions({
-      filter: (r, u) => ['âœ…', 'âŒ'].includes(r.emoji.name) && u.id === message.author.id,
+      filter: (r, u) => ['✅', 'âŒ'].includes(r.emoji.name) && u.id === message.author.id,
       max: 1, time: 30000,
     }).catch(() => null);
 
@@ -949,7 +949,7 @@ const commands = {
       return confirmMsg.edit({ embeds: [new EmbedBuilder().setColor('#95A5A6').setTitle('âŒ Annonce DM annulée')] });
     }
 
-    await confirmMsg.edit({ embeds: [new EmbedBuilder().setColor('#5865F2').setTitle('ðŸ“¨ Envoi des DMs en cours...')] });
+    await confirmMsg.edit({ embeds: [new EmbedBuilder().setColor('#5865F2').setTitle('📨 Envoi des DMs en cours...')] });
     await message.guild.members.fetch().catch(() => {});
     const targets = message.guild.members.cache.filter(m => !m.user.bot && m.roles.cache.has(role.id));
 
@@ -961,7 +961,7 @@ const commands = {
       try {
         await member.send({ embeds: [new EmbedBuilder()
           .setColor('#5865F2')
-          .setTitle(`ðŸ“¢ Message de ${message.guild.name}`)
+          .setTitle(`📢 Message de ${message.guild.name}`)
           .setDescription(personalizedMsg)
           .setThumbnail(message.guild.iconURL({ size: 256 }) ?? undefined)
           .setTimestamp()
@@ -973,10 +973,10 @@ const commands = {
 
     await confirmMsg.edit({ embeds: [new EmbedBuilder()
       .setColor(failed > 0 ? '#FFA500' : '#00FF66')
-      .setTitle('ðŸ“¨ Annonce DM terminée')
+      .setTitle('📨 Annonce DM terminée')
       .setDescription(`DMs envoyés aux membres avec le rôle <@&${role.id}>.`)
       .addFields(
-        { name: 'âœ… Envoyés', value: `${sent}`,        inline: true },
+        { name: '✅ Envoyés', value: `${sent}`,        inline: true },
         { name: 'âŒ Échecs',  value: `${failed}`,       inline: true },
         { name: 'Total',      value: `${targets.size}`, inline: true },
       )
@@ -990,7 +990,7 @@ const commands = {
     ], 'Annonce DM de masse', '#5865F2');
   },
 
-  // â”€â”€ WELCOME-SET â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── WELCOME-SET ──────────────────────────────────────────────
   '!welcome-set': async (message, args) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const parts = args.join(' ').split('|').map(s => s.trim());
@@ -998,22 +998,22 @@ const commands = {
     if (!parts[0] || parts.length < 2) {
       return message.reply({ embeds: [new EmbedBuilder()
         .setColor(welcomeConfig.channelId ? '#00FF66' : '#FF4444')
-        .setTitle('ðŸ”” Configuration â€” Bienvenue automatique')
+        .setTitle('🔔 Configuration — Bienvenue automatique')
         .setDescription(
           '**Format :** `!welcome-set <#channel> | <message>`\n' +
-          '**Variables :** `{user}` â†’ mention Â· `{server}` â†’ nom du serveur Â· `{count}` â†’ nb membres\n' +
+          '**Variables :** `{user}` → mention · `{server}` → nom du serveur · `{count}` → nb membres\n' +
           '**Désactiver :** `!welcome-set disable`\n\n**Configuration actuelle :**'
         )
         .addFields(
-          { name: 'ðŸ“¢ Salon',    value: welcomeConfig.channelId ? `<#${welcomeConfig.channelId}>` : '`Non configuré`', inline: true },
-          { name: 'ðŸ’¬ Message', value: welcomeConfig.message ? welcomeConfig.message.slice(0, 500) : '`Non configuré`', inline: false },
+          { name: '📢 Salon',    value: welcomeConfig.channelId ? `<#${welcomeConfig.channelId}>` : '`Non configuré`', inline: true },
+          { name: '💬 Message', value: welcomeConfig.message ? welcomeConfig.message.slice(0, 500) : '`Non configuré`', inline: false },
         )
         .setTimestamp()] });
     }
 
     if (parts[0].toLowerCase() === 'disable') {
       welcomeConfig.channelId = null; welcomeConfig.message = null; saveWelcomeConf();
-      return message.reply({ embeds: [new EmbedBuilder().setColor('#95A5A6').setTitle('ðŸ”• Message de bienvenue désactivé')] });
+      return message.reply({ embeds: [new EmbedBuilder().setColor('#95A5A6').setTitle('🔕 Message de bienvenue désactivé')] });
     }
 
     const channel = message.mentions.channels.first();
@@ -1030,16 +1030,16 @@ const commands = {
 
     await message.reply({ embeds: [new EmbedBuilder()
       .setColor('#00FF66')
-      .setTitle('ðŸ”” Message de bienvenue configuré âœ…')
+      .setTitle('🔔 Message de bienvenue configuré ✅')
       .addFields(
-        { name: 'ðŸ“¢ Salon',    value: `${channel}`,            inline: true },
-        { name: 'ðŸ‘¤ Aperçu', value: preview.slice(0, 500),     inline: false },
+        { name: '📢 Salon',    value: `${channel}`,            inline: true },
+        { name: '👤 Aperçu', value: preview.slice(0, 500),     inline: false },
       )
       .setFooter({ text: 'Ce message sera envoyé automatiquement à chaque nouveau membre.' })
       .setTimestamp()] });
   },
 
-  // â”€â”€ CLEAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── CLEAR ────────────────────────────────────────────────────
   '!clear': async (message, args) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const amount = parseInt(args[0]);
@@ -1059,7 +1059,7 @@ const commands = {
     }
   },
 
-  // â”€â”€ SAY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── SAY ──────────────────────────────────────────────────────
   '!say': async (message, args) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     try { await message.delete(); } catch {}
@@ -1092,7 +1092,7 @@ const commands = {
     }
   },
 
-  // â”€â”€ WARNS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── WARNS ────────────────────────────────────────────────────
   '!warn': async (message, args) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const target = message.mentions.members.first();
@@ -1190,7 +1190,7 @@ const commands = {
     ], `Warns effaces -- ${target.user.tag}`, '#00FF66');
   },
 
-  // â”€â”€ EXPIREDJAILS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── EXPIREDJAILS ─────────────────────────────────────────────
   '!expiredjails': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const active = Object.entries(jailsData);
@@ -1205,7 +1205,7 @@ const commands = {
     await message.reply({ embeds: [embed('#FF4444').setTitle(`Jails actifs -- ${active.length} membre(s)`).addFields(fields)] });
   },
 
-  // â”€â”€ SANCTION LOG â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── SANCTION LOG ─────────────────────────────────────────────
   '!sanction-log': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const channel = message.mentions.channels.first();
@@ -1214,7 +1214,7 @@ const commands = {
     await message.reply(`Salon de logs des sanctions defini : ${channel}`);
   },
 
-  // â”€â”€ JAIL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── JAIL ─────────────────────────────────────────────────────
   '!jail': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const target = message.mentions.members.first();
@@ -1265,7 +1265,7 @@ const commands = {
     } catch (err) { await message.reply(`Erreur : ${err.message}`); }
   },
 
-  // â”€â”€ TOURNOI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── TOURNOI ──────────────────────────────────────────────────
   '!tournoi-start': async (message, args) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const photoChannel = message.mentions.channels.first();
@@ -1343,7 +1343,7 @@ const commands = {
     await message.reply({ embeds: [embed('#FF4444').setTitle('Tournoi annule').setDescription(`Le tournoi #${activeTournament.id} a ete annule par <@${message.author.id}>.`)] });
   },
 
-  // â”€â”€ NPC â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── NPC ──────────────────────────────────────────────────────
   '!npc': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const target = message.mentions.members.first();
@@ -1383,7 +1383,7 @@ const commands = {
     } catch (err) { await message.reply(`Erreur : ${err.message}`); }
   },
 
-  // â”€â”€ RESETPSEUDO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── RESETPSEUDO ──────────────────────────────────────────────
   '!resetpseudo': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const target = message.mentions.members.first();
@@ -1401,7 +1401,7 @@ const commands = {
     } catch (err) { await message.reply(`Erreur : ${err.message}`); }
   },
 
-  // â”€â”€ TF â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── TF ───────────────────────────────────────────────────────
   '!tf': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const target = message.mentions.members.first();
@@ -1442,7 +1442,7 @@ const commands = {
     } catch (err) { await message.reply(`Erreur : ${err.message}`); }
   },
 
-  // â”€â”€ TICKETS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── TICKETS ──────────────────────────────────────────────────
   '!ticket-setrole': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const role = message.mentions.roles.first();
@@ -1532,7 +1532,7 @@ const commands = {
     setTimeout(async () => { try { await message.channel.delete(`Ticket ferme par ${message.author.tag}`); } catch (err) { console.error('[FERMER] Erreur suppression salon :', err.message); } }, 5000);
   },
 
-  // â”€â”€ REACTION ROLES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── REACTION ROLES ───────────────────────────────────────────
   '!rr-setup': async (message, args) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const parts = args.join(' ').split('|').map(s => s.trim());
@@ -1636,7 +1636,7 @@ const commands = {
     await message.reply(rrEntry.existingMessage ? `Config RR retiree du message \`${messageId}\` (message original conserve).` : `Message RR \`${messageId}\` supprime.`);
   },
 
-  // â”€â”€ ETUDES / PUBMED â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── ETUDES / PUBMED ──────────────────────────────────────────
   '!pubmed': async (message) => {
     const fields = [{ name: 'Titre', value: studyData.title || 'Non defini', inline: false }];
     if (studyData.url)   fields.push({ name: 'Lien',        value: studyData.url,           inline: false });
@@ -1654,7 +1654,7 @@ const commands = {
     await message.reply(`Etude mise a jour : **${studyData.title}**`);
   },
 
-  // â”€â”€ COPE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── COPE ─────────────────────────────────────────────────────
   '!cope': async (message) => {
     const copeList        = copesData.cope.length        > 0 ? copesData.cope.map((c, i)        => `${i + 1}. ${c}`).join('\n') : '*Aucun complement.*';
     const interestingList = copesData.interesting.length > 0 ? copesData.interesting.map((c, i) => `${i + 1}. ${c}`).join('\n') : '*Aucun complement.*';
@@ -1689,7 +1689,7 @@ const commands = {
     copesData.interesting.splice(idx, 1); saveJSON(FILES.copes, copesData); await message.reply(`**${name}** retire de la liste Interessants.`);
   },
 
-  // â”€â”€ REGLES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── REGLES ───────────────────────────────────────────────────
   '!regles': async (message) => {
     const rulesList = Object.entries(rulesData).sort(([a], [b]) => Number(a) - Number(b)).map(([n, text]) => `**${n}.** ${text}`).join('\n');
     await message.reply({ embeds: [embed('#FAD961').setTitle('Regles du serveur').setDescription(rulesList || '*Aucune regle definie.*')] });
@@ -1701,7 +1701,7 @@ const commands = {
     rulesData[parts[0]] = parts[1]; saveJSON(FILES.rules, rulesData); await message.reply(`Regle **${parts[0]}** mise a jour.`);
   },
 
-  // â”€â”€ MODERATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── MODERATION ───────────────────────────────────────────────
   '!source': async (message) => {
     if (isAdmin(message.author.id)) return;
     try {
@@ -1738,7 +1738,7 @@ const commands = {
     } catch (err) { await message.reply(`Erreur lors du ban : ${err.message}`); }
   },
 
-  // â”€â”€ FLUIDE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── FLUIDE ───────────────────────────────────────────────────
   '!fluide': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusee.');
     const target = message.mentions.members.first();
@@ -1754,7 +1754,7 @@ const commands = {
       ).setFooter({ text: `Decision prise par ${message.author.displayName} -- Systeme Fluide` })] });
   },
 
-  // â”€â”€ IQTEST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── IQTEST ───────────────────────────────────────────────────
   '!iqtest': async (message) => {
     const target = message.mentions.members.first() || message.member;
     const base = isAdmin(message.author.id) ? 110 : 90;
@@ -1773,7 +1773,7 @@ const commands = {
     ).setFooter({ text: 'Certifie par l\'Institut International du Cerveau Fluide' })] });
   },
 
-  // â”€â”€ COPE DU JOUR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── COPE DU JOUR ─────────────────────────────────────────────
   '!cope-du-jour': async (message) => {
     if (copesData.cope.length === 0) return message.reply('Aucun cope dans la liste. Utilise `!add-cope` pour en ajouter.');
     const random = copesData.cope[Math.floor(Math.random() * copesData.cope.length)];
@@ -1785,7 +1785,7 @@ const commands = {
     ).setFooter({ text: 'Base sur des donnees solides. Tres solides. Betonnees.' })] });
   },
 
-  // â”€â”€ MOMMY ASMR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── MOMMY ASMR ───────────────────────────────────────────────
   '!mommy-asmr': async (message) => {
     if (!CONFIG.MOMMY_ASMR_USER_IDS.includes(message.author.id)) return message.reply('Permission refusee.');
     try {
@@ -1794,7 +1794,7 @@ const commands = {
   },
 
   // ============================================================
-  //  VÉRIFICATION MANUELLE â€” COMMANDES ADMIN
+  //  VÉRIFICATION MANUELLE — COMMANDES ADMIN
   // ============================================================
 
   /**
@@ -1811,21 +1811,21 @@ const commands = {
       return message.reply({
         embeds: [new EmbedBuilder()
           .setColor('#00C851')
-          .setTitle('âš™ï¸ Configuration Vérification â€” Assistant')
+          .setTitle('⚙ï¸ Configuration Vérification — Assistant')
           .setDescription(
             'Pour configurer le système, utilise :\n' +
             '```\n!verif-setup @role-pending | @role-approuvé | #channel-verif | #channel-log-admin\n```\n\n' +
             '**Explications :**\n' +
-            '• `@role-pending` â€” Rôle donné après réaction (accès limité)\n' +
-            '• `@role-approuvé` â€” Rôle donné après approbation admin (accès complet)\n' +
-            '• `#channel-verif` â€” Salon où le membre attend sa vérif\n' +
-            '• `#channel-log-admin` â€” Salon privé admin où arrivent les demandes\n\n' +
+            '• `@role-pending` — Rôle donné après réaction (accès limité)\n' +
+            '• `@role-approuvé` — Rôle donné après approbation admin (accès complet)\n' +
+            '• `#channel-verif` — Salon où le membre attend sa vérif\n' +
+            '• `#channel-log-admin` — Salon privé admin où arrivent les demandes\n\n' +
             '**Config actuelle :**\n' +
             `• Rôle pending : ${verifConfig.pendingRoleId  ? `<@&${verifConfig.pendingRoleId}>`  : '`non défini`'}\n` +
             `• Rôle approuvé : ${verifConfig.approvedRoleId ? `<@&${verifConfig.approvedRoleId}>` : '`non défini`'}\n` +
             `• Channel vérif : ${verifConfig.verifChannelId ? `<#${verifConfig.verifChannelId}>` : '`non défini`'}\n` +
             `• Channel log : ${verifConfig.logChannelId    ? `<#${verifConfig.logChannelId}>`   : '`non défini`'}\n` +
-            `• Statut : ${verifConfig.enabled ? 'âœ… **ACTIVÉ**' : 'âŒ **DÉSACTIVÉ**'}`
+            `• Statut : ${verifConfig.enabled ? '✅ **ACTIVÉ**' : 'âŒ **DÉSACTIVÉ**'}`
           )
           .setFooter({ text: 'Après configuration, utilise !verif-enable pour activer' })],
       });
@@ -1850,7 +1850,7 @@ const commands = {
     await message.reply({
       embeds: [new EmbedBuilder()
         .setColor('#00C851')
-        .setTitle('âœ… Vérification configurée')
+        .setTitle('✅ Vérification configurée')
         .addFields(
           { name: 'Rôle pending',   value: `<@&${verifConfig.pendingRoleId}>`,  inline: true },
           { name: 'Rôle approuvé',  value: `<@&${verifConfig.approvedRoleId}>`, inline: true },
@@ -1865,7 +1865,7 @@ const commands = {
           '2. Utiliser `!verif-enable` pour activer le système\n' +
           '3. Configurer les permissions du channel vérif pour que seul le rôle pending puisse le voir'
         )
-        .setFooter({ text: 'Système prêt Â· Utilise !verif-enable pour activer' })],
+        .setFooter({ text: 'Système prêt · Utilise !verif-enable pour activer' })],
     });
   },
 
@@ -1876,7 +1876,7 @@ const commands = {
     await message.reply({
       embeds: [new EmbedBuilder()
         .setColor(verifConfig.enabled ? '#00C851' : '#FF4444')
-        .setTitle(`ðŸ” Config Vérification â€” ${verifConfig.enabled ? 'âœ… ACTIVÉ' : 'âŒ DÉSACTIVÉ'}`)
+        .setTitle(`ðŸ” Config Vérification — ${verifConfig.enabled ? '✅ ACTIVÉ' : 'âŒ DÉSACTIVÉ'}`)
         .addFields(
           { name: 'Rôle pending',         value: verifConfig.pendingRoleId  ? `<@&${verifConfig.pendingRoleId}>`  : '`non défini`', inline: true },
           { name: 'Rôle approuvé',        value: verifConfig.approvedRoleId ? `<@&${verifConfig.approvedRoleId}>` : '`non défini`', inline: true },
@@ -1885,9 +1885,9 @@ const commands = {
           { name: 'Channel log admin',    value: verifConfig.logChannelId   ? `<#${verifConfig.logChannelId}>`   : '`non défini`', inline: true },
           { name: '\u200b',               value: '\u200b', inline: true },
           { name: 'â³ En attente',        value: `${pendingCount} membre(s)`, inline: true },
-          { name: 'ðŸš« Blacklistés',       value: `${blCount} entrée(s)`,      inline: true },
+          { name: '🚫 Blacklistés',       value: `${blCount} entrée(s)`,      inline: true },
         )
-        .setFooter({ text: '!verif-enable / !verif-disable Â· !verif-setup pour reconfigurer' })],
+        .setFooter({ text: '!verif-enable / !verif-disable · !verif-setup pour reconfigurer' })],
     });
   },
 
@@ -1897,7 +1897,7 @@ const commands = {
       return message.reply('âŒ Configure d\'abord le système avec `!verif-setup` avant de l\'activer.');
     }
     verifConfig.enabled = true; saveVerifConfig();
-    await message.reply('âœ… Système de vérification **activé**. Les nouvelles réactions déclencheront le flux de vérification manuelle.');
+    await message.reply('✅ Système de vérification **activé**. Les nouvelles réactions déclencheront le flux de vérification manuelle.');
   },
 
   '!verif-disable': async (message) => {
@@ -1906,7 +1906,7 @@ const commands = {
     await message.reply('âŒ Système de vérification **désactivé**. Le comportement par défaut (rôle direct) est restauré.');
   },
 
-  // â”€â”€ WHITELIST / BLACKLIST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── WHITELIST / BLACKLIST ─────────────────────────────────────
   '!whitelist': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const target = message.mentions.members.first();
@@ -1934,7 +1934,7 @@ const commands = {
       await message.reply({
         embeds: [new EmbedBuilder()
           .setColor('#00C851')
-          .setTitle('âœ… Membre approuvé')
+          .setTitle('✅ Membre approuvé')
           .setDescription(`<@${target.id}> a été approuvé manuellement et a maintenant accès au serveur.`)
           .addFields(
             { name: 'Rôle attribué', value: `<@&${verifConfig.approvedRoleId}>`, inline: true },
@@ -1950,8 +1950,8 @@ const commands = {
             content: `<@${target.id}>`,
             embeds: [new EmbedBuilder()
               .setColor('#00C851')
-              .setTitle('âœ… Vérification approuvée !')
-              .setDescription('Tu as été vérifié et tu as maintenant accès au serveur. Bienvenue ! ðŸŽ‰')],
+              .setTitle('✅ Vérification approuvée !')
+              .setDescription('Tu as été vérifié et tu as maintenant accès au serveur. Bienvenue ! 🎉')],
           }).catch(() => {});
         }
       }
@@ -1987,7 +1987,7 @@ const commands = {
     await message.reply({
       embeds: [new EmbedBuilder()
         .setColor('#FF0000')
-        .setTitle('ðŸš« Membre blacklisté & kické')
+        .setTitle('🚫 Membre blacklisté & kické')
         .addFields(
           { name: 'Membre', value: `${target.user.tag} (${target.id})`, inline: false },
           { name: 'Raison', value: reason,                               inline: false },
@@ -1999,7 +1999,7 @@ const commands = {
       { name: 'Membre', value: target.user.tag,           inline: true },
       { name: 'Par',    value: `<@${message.author.id}>`, inline: true },
       { name: 'Raison', value: reason,                    inline: false },
-    ], `Blacklist â€” ${target.user.tag}`, '#FF0000');
+    ], `Blacklist — ${target.user.tag}`, '#FF0000');
   },
 
   '!unblacklist': async (message) => {
@@ -2015,7 +2015,7 @@ const commands = {
     await message.reply({
       embeds: [new EmbedBuilder()
         .setColor('#00C851')
-        .setTitle('âœ… Blacklist levée')
+        .setTitle('✅ Blacklist levée')
         .addFields(
           { name: 'Membre',            value: entry.tag || target.tag, inline: true },
           { name: 'Par',               value: `<@${message.author.id}>`, inline: true },
@@ -2029,10 +2029,10 @@ const commands = {
   '!blacklist-list': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const entries = Object.entries(blacklistData);
-    if (entries.length === 0) return message.reply('La blacklist est vide. âœ…');
+    if (entries.length === 0) return message.reply('La blacklist est vide. ✅');
 
     const fields = entries.slice(0, 25).map(([userId, data]) => ({
-      name: `${data.tag || userId} Â· \`${userId}\``,
+      name: `${data.tag || userId} · \`${userId}\``,
       value: `Raison : ${data.reason}\nPar <@${data.by}> le ${new Date(data.at).toLocaleDateString('fr-FR')}`,
       inline: false,
     }));
@@ -2040,7 +2040,7 @@ const commands = {
     await message.reply({
       embeds: [new EmbedBuilder()
         .setColor('#FF0000')
-        .setTitle(`ðŸš« Blacklist â€” ${entries.length} entrée(s)`)
+        .setTitle(`🚫 Blacklist — ${entries.length} entrée(s)`)
         .addFields(fields)
         .setFooter({ text: entries.length > 25 ? `Affiche 25/${entries.length} entrées` : `${entries.length} entrée(s) au total` })],
     });
@@ -2049,10 +2049,10 @@ const commands = {
   '!pending-list': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const entries = Object.entries(pendingVerifs);
-    if (entries.length === 0) return message.reply('Aucune vérification en attente. âœ…');
+    if (entries.length === 0) return message.reply('Aucune vérification en attente. ✅');
 
     const fields = entries.slice(0, 25).map(([userId, data]) => ({
-      name: `${data.tag} Â· \`${userId}\``,
+      name: `${data.tag} · \`${userId}\``,
       value: `Demande reçue le ${new Date(data.requestedAt).toLocaleString('fr-FR')}\n[Voir le message](https://discord.com/channels/${message.guild.id}/${data.logChannelId}/${data.logMessageId})`,
       inline: false,
     }));
@@ -2060,14 +2060,14 @@ const commands = {
     await message.reply({
       embeds: [new EmbedBuilder()
         .setColor('#FFA500')
-        .setTitle(`â³ Vérifications en attente â€” ${entries.length}`)
+        .setTitle(`â³ Vérifications en attente — ${entries.length}`)
         .addFields(fields)
         .setFooter({ text: 'Utilise les boutons dans le channel log pour traiter chaque demande' })],
     });
   },
 
   // ============================================================
-  //  RATING GYMGIRL â€” SYSTÈME ELO
+  //  RATING GYMGIRL — SYSTÈME ELO
   // ============================================================
 
   '!rate': async (message) => {
@@ -2094,7 +2094,7 @@ const commands = {
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId(`rate_${voteId}_A`)
-        .setLabel('â¬…ï¸  Elle')
+        .setLabel('⬅ï¸  Elle')
         .setStyle(ButtonStyle.Primary),
       new ButtonBuilder()
         .setCustomId(`rate_${voteId}_skip`)
@@ -2102,28 +2102,28 @@ const commands = {
         .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
         .setCustomId(`rate_${voteId}_B`)
-        .setLabel('Elle  âž¡ï¸')
+        .setLabel('Elle  ➡ï¸')
         .setStyle(ButtonStyle.Danger),
     );
 
     const headerEmbed = new EmbedBuilder()
       .setColor('#FF6B9D')
-      .setTitle('âš¡ Qui a le meilleur physique ?')
+      .setTitle('⚡ Qui a le meilleur physique ?')
       .setDescription(
         `**${girlA.name}** \`ELO ${girlA.elo}\`  vs  **${girlB.name}** \`ELO ${girlB.elo}\`\n\n` +
-        `Clique sur un bouton pour voter â€” le résultat met à jour le classement ELO en temps réel.\n` +
+        `Clique sur un bouton pour voter — le résultat met à jour le classement ELO en temps réel.\n` +
         `Plusieurs membres peuvent voter sur le même duel.`
       )
-      .setFooter({ text: `Vote lancé par ${message.author.displayName} Â· Expire dans 5 min` })
+      .setFooter({ text: `Vote lancé par ${message.author.displayName} · Expire dans 5 min` })
       .setTimestamp();
 
     await message.channel.send({ embeds: [headerEmbed] });
 
-    await message.channel.send({ content: `â¬…ï¸  **${girlA.name}**`, files: [girlA.imageUrl] })
-      .catch(() => message.channel.send({ content: `â¬…ï¸  **${girlA.name}** â€” ${girlA.imageUrl}` }));
+    await message.channel.send({ content: `⬅ï¸  **${girlA.name}**`, files: [girlA.imageUrl] })
+      .catch(() => message.channel.send({ content: `⬅ï¸  **${girlA.name}** — ${girlA.imageUrl}` }));
 
-    await message.channel.send({ content: `âž¡ï¸  **${girlB.name}**`, files: [girlB.imageUrl] })
-      .catch(() => message.channel.send({ content: `âž¡ï¸  **${girlB.name}** â€” ${girlB.imageUrl}` }));
+    await message.channel.send({ content: `➡ï¸  **${girlB.name}**`, files: [girlB.imageUrl] })
+      .catch(() => message.channel.send({ content: `➡ï¸  **${girlB.name}** — ${girlB.imageUrl}` }));
 
     const voteMsg = await message.channel.send({ components: [row] });
 
@@ -2149,9 +2149,9 @@ const commands = {
         const msg = await message.channel.messages.fetch(voteMsg.id).catch(() => null);
         if (msg) {
           const expiredRow = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId('rate_expired_A').setLabel('â¬…ï¸ Elle').setStyle(ButtonStyle.Secondary).setDisabled(true),
+            new ButtonBuilder().setCustomId('rate_expired_A').setLabel('⬅ï¸ Elle').setStyle(ButtonStyle.Secondary).setDisabled(true),
             new ButtonBuilder().setCustomId('rate_expired_skip').setLabel('â­ï¸ Skip').setStyle(ButtonStyle.Secondary).setDisabled(true),
-            new ButtonBuilder().setCustomId('rate_expired_B').setLabel('Elle âž¡ï¸').setStyle(ButtonStyle.Secondary).setDisabled(true),
+            new ButtonBuilder().setCustomId('rate_expired_B').setLabel('Elle ➡ï¸').setStyle(ButtonStyle.Secondary).setDisabled(true),
           );
           await msg.edit({ components: [expiredRow] }).catch(() => {});
         }
@@ -2171,13 +2171,13 @@ const commands = {
     if (girls.length === 0) return message.reply('Aucune gymgirl dans la base de données.');
 
     const sorted  = [...girls].sort((a, b) => b.elo - a.elo);
-    const medals  = ['ðŸ¥‡', 'ðŸ¥ˆ', 'ðŸ¥‰'];
+    const medals  = ['🥇', '🥈', '🥉'];
     const fields  = sorted.slice(0, 10).map((g, i) => {
       const total   = g.wins + g.losses;
       const winrate = total > 0 ? Math.round(g.wins / total * 100) : 0;
       return {
         name:   `${medals[i] || `#${i + 1}`}  ${g.name}`,
-        value:  `ELO **${g.elo}** Â· ${g.wins}V / ${g.losses}D Â· Win rate ${winrate}%`,
+        value:  `ELO **${g.elo}** · ${g.wins}V / ${g.losses}D · Win rate ${winrate}%`,
         inline: false,
       };
     });
@@ -2185,9 +2185,9 @@ const commands = {
     await message.reply({
       embeds: [new EmbedBuilder()
         .setColor('#FFD700')
-        .setTitle('ðŸ† Classement Gymgirl â€” Top 10')
+        .setTitle('ðŸ† Classement Gymgirl — Top 10')
         .addFields(fields)
-        .setFooter({ text: `${girls.length} athlète(s) dans la base Â· Système ELO (K=32)` })
+        .setFooter({ text: `${girls.length} athlète(s) dans la base · Système ELO (K=32)` })
         .setTimestamp()],
     });
   },
@@ -2198,13 +2198,13 @@ const commands = {
     const girls = db.girls || [];
     if (girls.length === 0) return message.reply('Aucune gymgirl dans la base.');
     const sorted = [...girls].sort((a, b) => b.elo - a.elo);
-    const list   = sorted.map((g, i) => `\`${String(i + 1).padStart(2, '0')}\` **${g.name}** Â· ELO ${g.elo} Â· ${g.wins}V/${g.losses}D Â· ID \`${g.id}\``).join('\n');
+    const list   = sorted.map((g, i) => `\`${String(i + 1).padStart(2, '0')}\` **${g.name}** · ELO ${g.elo} · ${g.wins}V/${g.losses}D · ID \`${g.id}\``).join('\n');
     await message.reply({
       embeds: [new EmbedBuilder()
         .setColor('#7289DA')
-        .setTitle(`ðŸ“‹ Liste complète â€” ${girls.length} gymgirl(s)`)
+        .setTitle(`📋 Liste complète — ${girls.length} gymgirl(s)`)
         .setDescription(list.slice(0, 4096))
-        .setFooter({ text: 'Base de données : JSONBin.io Â· !rate-add / !rate-remove pour gérer' })],
+        .setFooter({ text: 'Base de données : JSONBin.io · !rate-add / !rate-remove pour gérer' })],
     });
   },
 
@@ -2230,7 +2230,7 @@ const commands = {
     await message.reply({
       embeds: [new EmbedBuilder()
         .setColor('#00FF66')
-        .setTitle('Gymgirl ajoutée âœ…')
+        .setTitle('Gymgirl ajoutée ✅')
         .addFields(
           { name: 'Nom',      value: name,          inline: true },
           { name: 'ELO init', value: '1000',         inline: true },
@@ -2271,7 +2271,7 @@ const commands = {
     await message.reply(`ELO de **${girl.name}** réinitialisé à 1000.`);
   },
 
-  // â”€â”€ GIVE-RATING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── GIVE-RATING ──────────────────────────────────────────────
   '!give-rating': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const target = message.mentions.members.first();
@@ -2295,7 +2295,7 @@ const commands = {
     await message.reply({
       embeds: [new EmbedBuilder()
         .setColor('#00FF66')
-        .setTitle('Rôle Rating attribué âœ…')
+        .setTitle('Rôle Rating attribué ✅')
         .setDescription(`<@${target.id}> a désormais accès au système de rating gymgirl.`)
         .addFields(
           { name: 'Rôle',  value: `<@&${CONFIG.RATING_ROLE_ID}>`,  inline: true },
@@ -2305,7 +2305,7 @@ const commands = {
     });
   },
 
-  // â”€â”€ LIVE (vérification manuelle TikTok) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── LIVE (vérification manuelle TikTok) ──────────────────────
   '!live': async (message) => {
     const statusMsg = await message.reply({ embeds: [embed('#FF0050').setTitle('Vérification TikTok en cours...').setDescription(`Interrogation de TikTok pour **@${CONFIG.TIKTOK_USERNAME}**...`)] });
     try {
@@ -2329,9 +2329,9 @@ const commands = {
       const positiveSignals = patterns.filter(Boolean).length;
       const isLive = positiveSignals >= 2;
       const color = isLive ? '#FF0050' : '#95A5A6';
-      const statusText = isLive ? 'ðŸ”´ EN LIVE ACTUELLEMENT' : 'âš« Pas en live';
+      const statusText = isLive ? '🔴 EN LIVE ACTUELLEMENT' : '⚫ Pas en live';
       const e = embed(color)
-        .setTitle(`TikTok Live â€” @${CONFIG.TIKTOK_USERNAME}`)
+        .setTitle(`TikTok Live — @${CONFIG.TIKTOK_USERNAME}`)
         .setDescription(`**Statut :** ${statusText}`)
         .addFields(
           { name: 'Signaux détectés', value: `${positiveSignals}/5`, inline: true },
@@ -2345,7 +2345,7 @@ const commands = {
     }
   },
 
-  // â”€â”€ STATS @user â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── STATS @user ───────────────────────────────────────────────
   '!stats': async (message) => {
     const target = message.mentions.members.first() || message.member;
     const userId = target.id;
@@ -2360,36 +2360,36 @@ const commands = {
     const roles = target.roles.cache.filter(r => r.id !== message.guild.id).map(r => `<@&${r.id}>`).join(', ') || '*Aucun*';
 
     const statusFlags = [];
-    if (isJailed)      statusFlags.push('ðŸ”’ En jail');
-    if (isNpc)         statusFlags.push('ðŸ¤– NPC actif');
-    if (isTf)          statusFlags.push('ðŸ“› TF actif');
-    if (isBlacklisted) statusFlags.push('ðŸš« Blacklisté');
-    if (isAdmin(userId)) statusFlags.push('âš¡ Admin');
-    if (statusFlags.length === 0) statusFlags.push('âœ… Normal');
+    if (isJailed)      statusFlags.push('🔒 En jail');
+    if (isNpc)         statusFlags.push('🤖 NPC actif');
+    if (isTf)          statusFlags.push('📛 TF actif');
+    if (isBlacklisted) statusFlags.push('🚫 Blacklisté');
+    if (isAdmin(userId)) statusFlags.push('⚡ Admin');
+    if (statusFlags.length === 0) statusFlags.push('✅ Normal');
 
     const color = isJailed ? '#FF4444' : warns >= 2 ? '#FFA500' : '#5865F2';
     await message.reply({ embeds: [embed(color)
-      .setTitle(`Profil â€” ${target.displayName}`)
+      .setTitle(`Profil — ${target.displayName}`)
       .setThumbnail(target.user.displayAvatarURL({ size: 256 }))
       .addFields(
-        { name: 'ðŸ‘¤ Identité',       value: `${target.user.tag}\nID : \`${userId}\``,             inline: true  },
-        { name: 'ðŸ“… Arrivée',        value: `Serveur : ${joinedTs}\nCompte : ${createdTs}`,        inline: true  },
+        { name: '👤 Identité',       value: `${target.user.tag}\nID : \`${userId}\``,             inline: true  },
+        { name: '📅 Arrivée',        value: `Serveur : ${joinedTs}\nCompte : ${createdTs}`,        inline: true  },
         { name: 'âš ï¸ Warns',          value: `**${warns}/3**`,                                      inline: true  },
-        { name: 'ðŸš¨ Statut actuel',  value: statusFlags.join('\n'),                                inline: true  },
-        { name: `ðŸŽ­ Rôles (${target.roles.cache.size - 1})`, value: roles.slice(0, 1024),          inline: false },
+        { name: '🚨 Statut actuel',  value: statusFlags.join('\n'),                                inline: true  },
+        { name: `🎭 Rôles (${target.roles.cache.size - 1})`, value: roles.slice(0, 1024),          inline: false },
       )
       .setFooter({ text: `Compte vieux de ${ageDays} jours` })
     ] });
   },
 
-  // â”€â”€ SONDAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── SONDAGE ───────────────────────────────────────────────────
   '!sondage': async (message, args) => {
     const parts = args.join(' ').split('|').map(s => s.trim()).filter(Boolean);
     if (parts.length < 3) return message.reply('Format : `!sondage <question> | <option1> | <option2> | [option3] | [option4]`\nMinimum 2 options, maximum 4.');
     const [question, ...options] = parts;
     if (options.length > 4) return message.reply('Maximum 4 options.');
 
-    const emojis = ['1ï¸âƒ£', '2ï¸âƒ£', '3ï¸âƒ£', '4ï¸âƒ£'];
+    const emojis = ['1ï¸⃣', '2ï¸⃣', '3ï¸⃣', '4ï¸⃣'];
     const votes = options.map(() => 0);
     const voters = {};
 
@@ -2397,13 +2397,13 @@ const commands = {
       const total = voteData.reduce((a, b) => a + b, 0);
       const fields = options.map((opt, i) => {
         const pct = total > 0 ? Math.round(voteData[i] / total * 100) : 0;
-        const bar = 'â–ˆ'.repeat(Math.floor(pct / 10)) + 'â–‘'.repeat(10 - Math.floor(pct / 10));
+        const bar = '█'.repeat(Math.floor(pct / 10)) + '░'.repeat(10 - Math.floor(pct / 10));
         return { name: `${emojis[i]} ${opt}`, value: `${bar} **${pct}%** (${voteData[i]} vote${voteData[i] !== 1 ? 's' : ''})`, inline: false };
       });
       return embed('#5865F2')
-        .setTitle(`ðŸ“Š ${question}`)
+        .setTitle(`📊 ${question}`)
         .addFields(fields)
-        .setFooter({ text: `${total} vote${total !== 1 ? 's' : ''} Â· Sondage lancé par ${message.author.tag}` });
+        .setFooter({ text: `${total} vote${total !== 1 ? 's' : ''} · Sondage lancé par ${message.author.tag}` });
     };
 
     const row = new ActionRowBuilder().addComponents(
@@ -2420,7 +2420,7 @@ const commands = {
     activeSondages[sondageMsg.id] = { question, options, votes, voters, buildEmbed, authorTag: message.author.tag };
   },
 
-  // â”€â”€ UNJAIL @user â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── UNJAIL @user ──────────────────────────────────────────────
   '!unjail': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const target = message.mentions.members.first();
@@ -2450,13 +2450,13 @@ const commands = {
         { name: 'Membre',    value: `<@${target.id}>`,          inline: true },
         { name: 'Par',       value: `<@${message.author.id}>`,  inline: true },
         { name: 'Motif',     value: 'Liberation manuelle',      inline: false },
-      ], `Unjail â€” ${target.user.tag}`, '#00FF66');
+      ], `Unjail — ${target.user.tag}`, '#00FF66');
     } catch (err) {
       await message.reply(`Erreur lors de la libération : ${err.message}`);
     }
   },
 
-  // â”€â”€ SET-COPE-BULK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── SET-COPE-BULK ─────────────────────────────────────────────
   '!set-cope-bulk': async (message, args) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     // Format : !set-cope-bulk cope | item1, item2, item3
@@ -2480,9 +2480,9 @@ const commands = {
     saveJSON(FILES.copes, copesData);
 
     await message.reply({ embeds: [embed('#00FF66')
-      .setTitle(`Import en masse â€” ${type === 'cope' ? 'COPE' : 'Intéressants'}`)
+      .setTitle(`Import en masse — ${type === 'cope' ? 'COPE' : 'Intéressants'}`)
       .addFields(
-        { name: 'âœ… Ajoutés',  value: `${added} élément(s)`,                                      inline: true },
+        { name: '✅ Ajoutés',  value: `${added} élément(s)`,                                      inline: true },
         { name: 'â­ï¸ Ignorés', value: `${skipped.length} (déjà présents)`,                         inline: true },
         { name: 'Total liste', value: `${list.length} élément(s)`,                                 inline: true },
         { name: 'Éléments ajoutés', value: items.filter(i => !skipped.includes(i)).map(i => `• ${i}`).join('\n').slice(0, 1024) || '*Aucun*', inline: false },
@@ -2490,7 +2490,7 @@ const commands = {
     ] });
   },
 
-  // â”€â”€ MUTE @user <durée en minutes> â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── MUTE @user <durée en minutes> ────────────────────────────
   '!mute': async (message, args) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const target = message.mentions.members.first();
@@ -2521,20 +2521,20 @@ const commands = {
         { name: 'Par',    value: `<@${message.author.id}>`,  inline: true },
         { name: 'Durée',  value: `${durationMin} min`,        inline: true },
         { name: 'Raison', value: reason,                      inline: false },
-      ], `Mute â€” ${target.user.tag}`, '#FFA500');
+      ], `Mute — ${target.user.tag}`, '#FFA500');
     } catch (err) {
       await message.reply(`Impossible de muter : ${err.message}`);
     }
   },
 
-  // â”€â”€ LIKE-ENABLE / LIKE-DISABLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── LIKE-ENABLE / LIKE-DISABLE ────────────────────────────────
   '!like-enable': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     likeEnabled = true;
     await message.reply({ embeds: [embed('#FFD700')
-      .setTitle('Like auto â€” Activé âœ…')
+      .setTitle('Like auto — Activé ✅')
       .setDescription(`Le bot va maintenant liker **automatiquement** tous les messages de <@${LIKE_TARGET_USER_ID}>.`)
-      .setFooter({ text: `Activé par ${message.author.tag} Â· !like-disable pour arrêter` })
+      .setFooter({ text: `Activé par ${message.author.tag} · !like-disable pour arrêter` })
     ] });
   },
 
@@ -2542,27 +2542,27 @@ const commands = {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     likeEnabled = false;
     await message.reply({ embeds: [embed('#95A5A6')
-      .setTitle('Like auto â€” Désactivé â›”')
+      .setTitle('Like auto — Désactivé ⛔')
       .setDescription(`Le bot ne like plus les messages de <@${LIKE_TARGET_USER_ID}>.`)
       .setFooter({ text: `Désactivé par ${message.author.tag}` })
     ] });
   },
 
-  // â”€â”€ CLEARROLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── CLEARROLE ────────────────────────────────────────────────
   '!clearrole': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const TARGET_ROLE_ID = '1487674672865611806';
     const guild = message.guild;
     const role = guild.roles.cache.get(TARGET_ROLE_ID);
     if (!role) return message.reply(`Rôle introuvable (ID : \`${TARGET_ROLE_ID}\`).`);
-    const statusMsg = await message.reply(`ðŸ”„ Récupération des membres avec le rôle **${role.name}**...`);
+    const statusMsg = await message.reply(`🔄 Récupération des membres avec le rôle **${role.name}**...`);
     try {
       await guild.members.fetch();
       const membersWithRole = guild.members.cache.filter(m => m.roles.cache.has(TARGET_ROLE_ID));
       if (membersWithRole.size === 0) {
-        return statusMsg.edit(`âœ… Aucun membre ne possède le rôle **${role.name}**.`);
+        return statusMsg.edit(`✅ Aucun membre ne possède le rôle **${role.name}**.`);
       }
-      await statusMsg.edit(`ðŸ”„ Suppression du rôle **${role.name}** sur **${membersWithRole.size}** membre(s)...`);
+      await statusMsg.edit(`🔄 Suppression du rôle **${role.name}** sur **${membersWithRole.size}** membre(s)...`);
       let success = 0;
       let failed  = 0;
       for (const [, member] of membersWithRole) {
@@ -2576,10 +2576,10 @@ const commands = {
       await statusMsg.edit({
         embeds: [new EmbedBuilder()
           .setColor(failed > 0 ? '#FFA500' : '#00FF66')
-          .setTitle('âœ… Clearrole terminé')
+          .setTitle('✅ Clearrole terminé')
           .addFields(
             { name: 'Rôle ciblé',   value: `<@&${TARGET_ROLE_ID}>`,        inline: true },
-            { name: 'âœ… Succès',     value: `${success} membre(s)`,          inline: true },
+            { name: '✅ Succès',     value: `${success} membre(s)`,          inline: true },
             { name: 'âŒ Échecs',     value: `${failed} membre(s)`,           inline: true },
             { name: 'Exécuté par',  value: `<@${message.author.id}>`,       inline: true },
           )
@@ -2599,7 +2599,7 @@ const commands = {
 };
 
 // ============================================================
-//  TOURNOI â€” LOGIQUE D'AVANCEMENT
+//  TOURNOI — LOGIQUE D'AVANCEMENT
 // ============================================================
 
 async function advanceTournament(tournamentId, channel) {
@@ -2646,14 +2646,14 @@ async function advanceTournament(tournamentId, channel) {
 }
 
 // ============================================================
-//  HANDLER â€” Interactions (boutons)
+//  HANDLER — Interactions (boutons)
 // ============================================================
 
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isButton()) return;
   const customId = interaction.customId;
 
-  // â”€â”€ Boutons de SONDAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Boutons de SONDAGE ─────────────────────────────────────
   if (customId.startsWith('sondage_')) {
     const optionIndex = parseInt(customId.split('_')[1]);
     const sondage = activeSondages[interaction.message.id];
@@ -2677,7 +2677,7 @@ client.on('interactionCreate', async (interaction) => {
     return;
   }
 
-  // â”€â”€ Boutons de VÉRIFICATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Boutons de VÉRIFICATION ────────────────────────────────
   if (customId.startsWith('verif_')) {
     // Seuls les admins peuvent interagir
     if (!isAdmin(interaction.user.id)) {
@@ -2696,13 +2696,13 @@ client.on('interactionCreate', async (interaction) => {
     // Récupérer le membre
     const member = await interaction.guild.members.fetch(userId).catch(() => null);
     if (!member) {
-      // Membre parti â€” nettoyer quand même
+      // Membre parti — nettoyer quand même
       delete pendingVerifs[userId]; savePendingVerifs();
       await disableVerifButtons(interaction.guild, userId, 'refused');
       return interaction.reply({ content: 'âŒ Le membre a quitté le serveur. Demande nettoyée.', ephemeral: true });
     }
 
-    // â”€â”€ APPROUVER â”€â”€
+    // ── APPROUVER ──
     if (action === 'approve') {
       if (!verifConfig.approvedRoleId) {
         return interaction.reply({ content: 'âŒ Rôle approuvé non configuré.', ephemeral: true });
@@ -2732,8 +2732,8 @@ client.on('interactionCreate', async (interaction) => {
               content: `<@${userId}>`,
               embeds: [new EmbedBuilder()
                 .setColor('#00C851')
-                .setTitle('âœ… Vérification approuvée !')
-                .setDescription('Tu as été vérifié et tu as maintenant accès complet au serveur. Bienvenue ! ðŸŽ‰')],
+                .setTitle('✅ Vérification approuvée !')
+                .setDescription('Tu as été vérifié et tu as maintenant accès complet au serveur. Bienvenue ! 🎉')],
             }).catch(() => {});
           }
         }
@@ -2741,7 +2741,7 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.reply({
           embeds: [new EmbedBuilder()
             .setColor('#00C851')
-            .setTitle('âœ… Approuvé')
+            .setTitle('✅ Approuvé')
             .setDescription(`<@${userId}> a été approuvé par <@${interaction.user.id}>.`)
             .addFields({ name: 'Rôle attribué', value: `<@&${verifConfig.approvedRoleId}>`, inline: true })],
           ephemeral: true,
@@ -2752,8 +2752,8 @@ client.on('interactionCreate', async (interaction) => {
           embeds: [interaction.message.embeds[0].toJSON()
             ? new EmbedBuilder(interaction.message.embeds[0].toJSON())
                 .setColor('#00C851')
-                .setTitle(`âœ… APPROUVÉ â€” ${interaction.message.embeds[0].title?.replace(/^[^\s]+\s/, '') || 'Demande de vérification'}`)
-                .setFooter({ text: `Approuvé par ${interaction.user.tag} Â· ${new Date().toLocaleString('fr-FR')}` })
+                .setTitle(`✅ APPROUVÉ — ${interaction.message.embeds[0].title?.replace(/^[^\s]+\s/, '') || 'Demande de vérification'}`)
+                .setFooter({ text: `Approuvé par ${interaction.user.tag} · ${new Date().toLocaleString('fr-FR')}` })
             : interaction.message.embeds[0]],
         }).catch(() => {});
 
@@ -2763,7 +2763,7 @@ client.on('interactionCreate', async (interaction) => {
       return;
     }
 
-    // â”€â”€ REFUSER (kick) â”€â”€
+    // ── REFUSER (kick) ──
     if (action === 'refuse') {
       try {
         // Notifier avant kick
@@ -2799,8 +2799,8 @@ client.on('interactionCreate', async (interaction) => {
           embeds: [interaction.message.embeds[0].toJSON()
             ? new EmbedBuilder(interaction.message.embeds[0].toJSON())
                 .setColor('#FF4444')
-                .setTitle(`âŒ REFUSÉ â€” ${interaction.message.embeds[0].title?.replace(/^[^\s]+\s/, '') || 'Demande de vérification'}`)
-                .setFooter({ text: `Refusé par ${interaction.user.tag} Â· ${new Date().toLocaleString('fr-FR')}` })
+                .setTitle(`âŒ REFUSÉ — ${interaction.message.embeds[0].title?.replace(/^[^\s]+\s/, '') || 'Demande de vérification'}`)
+                .setFooter({ text: `Refusé par ${interaction.user.tag} · ${new Date().toLocaleString('fr-FR')}` })
             : interaction.message.embeds[0]],
         }).catch(() => {});
 
@@ -2810,7 +2810,7 @@ client.on('interactionCreate', async (interaction) => {
       return;
     }
 
-    // â”€â”€ BLACKLIST + KICK â”€â”€
+    // ── BLACKLIST + KICK ──
     if (action === 'blacklist') {
       try {
         blacklistData[userId] = {
@@ -2829,7 +2829,7 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.reply({
           embeds: [new EmbedBuilder()
             .setColor('#8B0000')
-            .setTitle('ðŸš« Blacklisté & kické')
+            .setTitle('🚫 Blacklisté & kické')
             .setDescription(`<@${userId}> a été blacklisté et kické par <@${interaction.user.id}>.\nIl sera automatiquement bloqué s'il tente de rejoindre.`)],
           ephemeral: true,
         });
@@ -2839,8 +2839,8 @@ client.on('interactionCreate', async (interaction) => {
           embeds: [interaction.message.embeds[0].toJSON()
             ? new EmbedBuilder(interaction.message.embeds[0].toJSON())
                 .setColor('#8B0000')
-                .setTitle(`ðŸš« BLACKLISTÉ â€” ${interaction.message.embeds[0].title?.replace(/^[^\s]+\s/, '') || 'Demande de vérification'}`)
-                .setFooter({ text: `Blacklisté par ${interaction.user.tag} Â· ${new Date().toLocaleString('fr-FR')}` })
+                .setTitle(`🚫 BLACKLISTÉ — ${interaction.message.embeds[0].title?.replace(/^[^\s]+\s/, '') || 'Demande de vérification'}`)
+                .setFooter({ text: `Blacklisté par ${interaction.user.tag} · ${new Date().toLocaleString('fr-FR')}` })
             : interaction.message.embeds[0]],
         }).catch(() => {});
 
@@ -2848,7 +2848,7 @@ client.on('interactionCreate', async (interaction) => {
           { name: 'Membre', value: member.user.tag,           inline: true },
           { name: 'Par',    value: `<@${interaction.user.id}>`, inline: true },
           { name: 'Motif',  value: 'Blacklist lors vérification', inline: false },
-        ], `Blacklist Vérif â€” ${member.user.tag}`, '#8B0000');
+        ], `Blacklist Vérif — ${member.user.tag}`, '#8B0000');
 
       } catch (err) {
         return interaction.reply({ content: `Erreur : ${err.message}`, ephemeral: true });
@@ -2857,7 +2857,7 @@ client.on('interactionCreate', async (interaction) => {
     }
   }
 
-  // â”€â”€ Boutons de RATING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Boutons de RATING ──────────────────────────────────────
   if (customId.startsWith('rate_')) {
     const parts  = customId.split('_');
     const voteId = parts[1];
@@ -2914,20 +2914,20 @@ client.on('interactionCreate', async (interaction) => {
     await interaction.reply({
       embeds: [new EmbedBuilder()
         .setColor('#00FF66')
-        .setTitle('Vote enregistré âœ…')
+        .setTitle('Vote enregistré ✅')
         .setDescription(
           `Tu as voté pour **${winner.name}**.\n\n` +
-          `**${winner.name}** \`${prevWinnerElo}\` â†’ \`${winner.elo}\` **(+${gainW})**\n` +
-          `**${loser.name}** \`${prevLoserElo}\` â†’ \`${loser.elo}\` **(${gainL})**`
+          `**${winner.name}** \`${prevWinnerElo}\` → \`${winner.elo}\` **(+${gainW})**\n` +
+          `**${loser.name}** \`${prevLoserElo}\` → \`${loser.elo}\` **(${gainL})**`
         )
-        .setFooter({ text: `K=32 Â· Votes sur ce duel : ${active.votedUsers.length}` })],
+        .setFooter({ text: `K=32 · Votes sur ce duel : ${active.votedUsers.length}` })],
       ephemeral: true,
     });
 
     return;
   }
 
-  // â”€â”€ Boutons de TOURNOI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Boutons de TOURNOI ─────────────────────────────────────
   if (!customId.startsWith('tournament_')) return;
 
   if (!isAdmin(interaction.user.id)) {
@@ -2972,12 +2972,12 @@ client.on('interactionCreate', async (interaction) => {
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
-  // â”€â”€ LIKE AUTO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── LIKE AUTO ───────────────────────────────────────────────
   if (likeEnabled && message.author.id === LIKE_TARGET_USER_ID) {
     try { await message.react('â¤ï¸'); } catch (err) { console.warn('[LIKE AUTO] Impossible de réagir :', err.message); }
   }
 
-  // â”€â”€ ANTI-BADWORDS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── ANTI-BADWORDS ────────────────────────────────────────────
   if (!isAdmin(message.author.id) && badwordsData.words.length > 0) {
     const content = message.content.toLowerCase();
     const found = badwordsData.words.find(w => content.includes(w.toLowerCase()));
@@ -2987,7 +2987,7 @@ client.on('messageCreate', async (message) => {
       warnsData[message.author.id].push({ reason: 'Mot interdit détecté (auto)', by: client.user.id, at: new Date().toISOString() });
       saveWarns();
       const bwMsg = await message.channel.send({
-        embeds: [embed('#FF4444').setTitle('â›” Message supprimé â€” Mot interdit')
+        embeds: [embed('#FF4444').setTitle('⛔ Message supprimé — Mot interdit')
           .setDescription(`<@${message.author.id}>, ton message contient un mot interdit et a été supprimé. Un warn automatique a été ajouté.`)
           .addFields({ name: 'Warns', value: `${warnsData[message.author.id].length}/3`, inline: true })
           .setFooter({ text: 'Anti-BadWords automatique' })]
@@ -3032,7 +3032,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
   const emojiName = reaction.emoji.name;
   const { MESSAGE_ID, CHANNEL_ID, ROLE_ID, EMOJI } = CONFIG.REACTION_ROLE;
 
-  // â”€â”€ Message de vérification principal â”€â”€
+  // ── Message de vérification principal ──
   if (msgId === MESSAGE_ID && reaction.message.channel.id === CHANNEL_ID && emojiName === EMOJI) {
     const guild  = reaction.message.guild;
     const member = await guild.members.fetch(user.id).catch(() => null);
@@ -3040,18 +3040,18 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
     // Vérifier si blacklisté
     if (blacklistData[user.id]) {
-      console.log(`[VERIF] ${user.tag} est blacklisté â€” rejet automatique`);
+      console.log(`[VERIF] ${user.tag} est blacklisté — rejet automatique`);
       try { await reaction.users.remove(user.id); } catch {}
       try {
         await user.send({
           embeds: [new EmbedBuilder()
             .setColor('#8B0000')
-            .setTitle('ðŸš« Accès refusé')
+            .setTitle('🚫 Accès refusé')
             .setDescription('Tu es sur la liste noire de ce serveur et ne peux pas rejoindre.')],
         });
       } catch {}
       // Kick discret
-      await member.kick('Blacklisté â€” tentative de rejoindre le serveur').catch(() => {});
+      await member.kick('Blacklisté — tentative de rejoindre le serveur').catch(() => {});
       return;
     }
 
@@ -3091,7 +3091,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
                 .setDescription(
                   'Bienvenue ! Tu es actuellement en attente de vérification par le staff.\n\n' +
                   '> Un admin va examiner ton profil et te donner accès au serveur.\n' +
-                  '> Merci de patienter â€” cela peut prendre quelques heures.\n\n' +
+                  '> Merci de patienter — cela peut prendre quelques heures.\n\n' +
                   'En cas de problème, contacte un admin directement.'
                 )
                 .setFooter({ text: 'Ne quitte pas le serveur, tu perdrais ton statut de vérification' })],
@@ -3118,7 +3118,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
     return;
   }
 
-  // â”€â”€ Multi-RR classique â”€â”€
+  // ── Multi-RR classique ──
   if (reactionRolesData[msgId]) {
     const roleId = reactionRolesData[msgId].roles[emojiName];
     if (!roleId) return;
@@ -3163,7 +3163,7 @@ client.on('messageReactionRemove', async (reaction, user) => {
 });
 
 // ============================================================
-//  GUILDMEMBERADD â€” Vérification blacklist à l'arrivée
+//  GUILDMEMBERADD — Vérification blacklist à l'arrivée
 // ============================================================
 
 client.on('guildMemberAdd', async (member) => {
@@ -3174,10 +3174,10 @@ client.on('guildMemberAdd', async (member) => {
       await member.send({
         embeds: [new EmbedBuilder()
           .setColor('#8B0000')
-          .setTitle('ðŸš« Accès refusé')
+          .setTitle('🚫 Accès refusé')
           .setDescription('Tu es sur la liste noire de ce serveur.')],
       }).catch(() => {});
-      await member.kick('Blacklisté â€” entrée bloquée automatiquement');
+      await member.kick('Blacklisté — entrée bloquée automatiquement');
     } catch (err) {
       console.error('[VERIF] Erreur kick blacklist :', err.message);
     }
@@ -3189,7 +3189,7 @@ client.on('guildMemberAdd', async (member) => {
         await logCh.send({
           embeds: [new EmbedBuilder()
             .setColor('#8B0000')
-            .setTitle('ðŸš« Tentative d\'accès â€” Blacklisté')
+            .setTitle('🚫 Tentative d\'accès — Blacklisté')
             .setDescription(`<@${member.id}> (${member.user.tag}) a tenté de rejoindre mais est blacklisté.`)
             .addFields(
               { name: 'ID', value: member.id, inline: true },
@@ -3203,7 +3203,7 @@ client.on('guildMemberAdd', async (member) => {
     return; // Ne pas envoyer le message de bienvenue à un blacklisté
   }
 
-  // â”€â”€ MESSAGE DE BIENVENUE AUTOMATIQUE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── MESSAGE DE BIENVENUE AUTOMATIQUE ─────────────────────────
   if (welcomeConfig.channelId && welcomeConfig.message) {
     const welcomeCh = member.guild.channels.cache.get(welcomeConfig.channelId);
     if (welcomeCh) {
@@ -3214,11 +3214,11 @@ client.on('guildMemberAdd', async (member) => {
       await welcomeCh.send({
         embeds: [new EmbedBuilder()
           .setColor('#FFD700')
-          .setTitle('âš¡ Nouveau membre !')
+          .setTitle('⚡ Nouveau membre !')
           .setDescription(msg)
           .setThumbnail(member.user.displayAvatarURL({ size: 256 }))
           .setTimestamp()
-          .setFooter({ text: `Membre #${member.guild.memberCount} Â· ${member.guild.name}` })]
+          .setFooter({ text: `Membre #${member.guild.memberCount} · ${member.guild.name}` })]
       }).catch(() => {});
     }
   }
