@@ -57,7 +57,7 @@ const CONFIG = {
 
   // ── SNOOP LOG (messages supprimés) ───────────────────────────────────────
   SNOOP_SOURCE_GUILD_ID: '1469787479325278373',   // serveur surveillé
-  SNOOP_LOG_CHANNEL_ID:  '1181558038147125319',   // salon de destination des logs
+  SNOOP_LOG_CHANNEL_ID:  '1511111263470485695',   // salon de destination des logs
 };
 
 // ============================================================
