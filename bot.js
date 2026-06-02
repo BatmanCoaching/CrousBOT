@@ -58,6 +58,9 @@ const CONFIG = {
   // ── SNOOP LOG (messages supprimés) ───────────────────────────────────────
   SNOOP_SOURCE_GUILD_ID: '1469787479325278373',   // serveur surveillé
   SNOOP_LOG_CHANNEL_ID:  '1511111263470485695',   // salon de destination des logs
+
+  // ── STARBOARD (screen auto via réactions) ────────────────────────────────
+  STARBOARD_THRESHOLD: 3,   // nombre de réactions pour déclencher le starboard
 };
 
 // ============================================================
@@ -86,6 +89,7 @@ const FILES = {
   badwords:      path.join(DATA_DIR, 'badwords.json'),         // mots interdits
   welcomeConf:   path.join(DATA_DIR, 'welcome_config.json'),   // message de bienvenue
   zyzzHonors:    path.join(DATA_DIR, 'zyzz_honors.json'),      // titres Zyzz
+  starboard:     path.join(DATA_DIR, 'starboard.json'),        // config starboard
 };
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -231,6 +235,12 @@ let pendingVerifs   = loadJSON(FILES.pendingVerifs, {});   // { userId: { logMes
 let badwordsData    = loadJSON(FILES.badwords,      { words: [] });
 let welcomeConfig   = loadJSON(FILES.welcomeConf,   { channelId: null, message: null });
 let zyzzHonors      = loadJSON(FILES.zyzzHonors,    {});   // { userId: { by, at } }
+let starboardData   = loadJSON(FILES.starboard,     {
+  channelId: null,
+  emoji: '⭐',
+  threshold: CONFIG.STARBOARD_THRESHOLD,
+  posted: {},   // { messageId: starboardMessageId }
+});
 
 function saveVerifConfig()   { saveJSON(FILES.verifConfig,   verifConfig);   }
 function saveBlacklist()     { saveJSON(FILES.blacklist,     blacklistData); }
@@ -238,6 +248,7 @@ function savePendingVerifs() { saveJSON(FILES.pendingVerifs, pendingVerifs); }
 function saveBadwords()      { saveJSON(FILES.badwords,      badwordsData);  }
 function saveWelcomeConf()   { saveJSON(FILES.welcomeConf,   welcomeConfig); }
 function saveZyzzHonors()    { saveJSON(FILES.zyzzHonors,    zyzzHonors);    }
+function saveStarboard()     { saveJSON(FILES.starboard,     starboardData); }
 
 let ticketConfig = loadJSON(FILES.ticketConfig, {
   viewRoleId:  null,
@@ -2548,7 +2559,159 @@ const commands = {
     ] });
   },
 
-  // ── CLEARROLE ────────────────────────────────────────────────
+  // ── KICK ─────────────────────────────────────────────────────
+  '!kick': async (message, args) => {
+    if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
+    const target = message.mentions.members.first();
+    if (!target) return message.reply('Format : `!kick @user [raison]`');
+    if (isAdmin(target.id)) return message.reply('Tu ne peux pas kick un admin.');
+    if (!target.kickable) return message.reply('Je ne peux pas kick cet utilisateur (rôle supérieur au mien).');
+
+    const reason = args.slice(1).join(' ') || 'Aucune raison fournie';
+    try {
+      await target.kick(`${message.author.tag} : ${reason}`);
+      await message.reply({ embeds: [new EmbedBuilder()
+        .setColor('#FF8C00')
+        .setTitle('👢 Membre kické')
+        .addFields(
+          { name: 'Membre', value: `${target.user.tag} (\`${target.id}\`)`, inline: false },
+          { name: 'Par',    value: `<@${message.author.id}>`,               inline: true  },
+          { name: 'Raison', value: reason,                                   inline: false },
+        )
+        .setThumbnail(target.user.displayAvatarURL({ size: 256 }))
+        .setTimestamp()] });
+      await logSanction(message.guild, [
+        { name: 'Membre', value: target.user.tag,           inline: true  },
+        { name: 'Par',    value: `<@${message.author.id}>`, inline: true  },
+        { name: 'Raison', value: reason,                    inline: false },
+      ], `Kick — ${target.user.tag}`, '#FF8C00');
+    } catch (err) { await message.reply(`Erreur lors du kick : ${err.message}`); }
+  },
+
+  // ── BAN-LIST ──────────────────────────────────────────────────
+  '!ban-list': async (message) => {
+    if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
+    const statusMsg = await message.reply('🔄 Récupération des bans en cours...');
+    try {
+      const bans = await message.guild.bans.fetch();
+      if (bans.size === 0) {
+        return statusMsg.edit({ content: null, embeds: [new EmbedBuilder()
+          .setColor('#00FF66')
+          .setTitle('✅ Aucun membre banni')
+          .setDescription('La liste des bans est vide.')] });
+      }
+      const bansArr = [...bans.values()];
+      const chunks  = [];
+      for (let i = 0; i < bansArr.length; i += 10) chunks.push(bansArr.slice(i, i + 10));
+
+      const fields = chunks[0].map((ban, i) => ({
+        name:   `${i + 1}. ${ban.user.tag}`,
+        value:  `ID : \`${ban.user.id}\`\nRaison : ${ban.reason || '*Aucune*'}`,
+        inline: true,
+      }));
+
+      await statusMsg.edit({ content: null, embeds: [new EmbedBuilder()
+        .setColor('#FF4444')
+        .setTitle(`⛔ Membres bannis — ${bans.size} entrée(s)`)
+        .addFields(fields)
+        .setDescription(bans.size > 10 ? `*Affichage des 10 premiers sur ${bans.size}*` : null)
+        .setFooter({ text: `!unban <userID> pour débannir` })
+        .setTimestamp()] });
+    } catch (err) { await statusMsg.edit(`Erreur : ${err.message}`); }
+  },
+
+  // ── LEADERBOARD-WARNS ─────────────────────────────────────────
+  '!leaderboard-warns': async (message) => {
+    if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
+    const entries = Object.entries(warnsData)
+      .map(([userId, warns]) => ({ userId, count: warns.length }))
+      .filter(e => e.count > 0)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+
+    if (entries.length === 0) return message.reply({ embeds: [new EmbedBuilder()
+      .setColor('#00FF66')
+      .setTitle('✅ Aucun warn enregistré')
+      .setDescription('Tout le monde est sage pour l\'instant.')] });
+
+    const medals = ['🥇', '🥈', '🥉'];
+    const fields = entries.map((e, i) => {
+      const warns = warnsData[e.userId];
+      const last  = warns[warns.length - 1];
+      return {
+        name:   `${medals[i] || `#${i + 1}`}  <@${e.userId}>`,
+        value:  `**${e.count} warn(s)** · Dernier : ${new Date(last.at).toLocaleDateString('fr-FR')}\nMotif : ${last.reason.slice(0, 80)}`,
+        inline: false,
+      };
+    });
+
+    await message.reply({ embeds: [new EmbedBuilder()
+      .setColor('#FFA500')
+      .setTitle('⚠️ Leaderboard des warns — Top 10')
+      .addFields(fields)
+      .setFooter({ text: `${Object.keys(warnsData).length} membre(s) avec warn(s) · !clearwarns @user pour effacer` })
+      .setTimestamp()] });
+  },
+
+  // ── STARBOARD-SETUP ───────────────────────────────────────────
+  '!starboard-setup': async (message, args) => {
+    if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
+    const parts   = args.join(' ').split('|').map(s => s.trim());
+    const channel = message.mentions.channels.first();
+
+    // Affichage config si pas d'args
+    if (!channel && parts.length < 2) {
+      return message.reply({ embeds: [new EmbedBuilder()
+        .setColor(starboardData.channelId ? '#FFD700' : '#95A5A6')
+        .setTitle('⭐ Configuration Starboard')
+        .setDescription(
+          '**Format :** `!starboard-setup <#channel> | <emoji> | <seuil>`\n' +
+          '> `emoji` et `seuil` sont optionnels (défaut : ⭐ et 3)\n\n' +
+          '**Désactiver :** `!starboard-disable`\n\n**Config actuelle :**'
+        )
+        .addFields(
+          { name: '📢 Salon',   value: starboardData.channelId ? `<#${starboardData.channelId}>` : '`Non configuré`', inline: true  },
+          { name: '✨ Emoji',   value: starboardData.emoji,                                                            inline: true  },
+          { name: '🔢 Seuil',  value: `${starboardData.threshold} réaction(s)`,                                       inline: true  },
+        )
+        .setTimestamp()] });
+    }
+
+    if (!channel) return message.reply('Mentionne un salon valide : `!starboard-setup <#channel> | [emoji] | [seuil]`');
+
+    const emoji     = parts[1] || '⭐';
+    const threshold = parseInt(parts[2]) || CONFIG.STARBOARD_THRESHOLD;
+    if (isNaN(threshold) || threshold < 1) return message.reply('Le seuil doit être un nombre ≥ 1.');
+
+    starboardData.channelId = channel.id;
+    starboardData.emoji     = emoji;
+    starboardData.threshold = threshold;
+    saveStarboard();
+
+    await message.reply({ embeds: [new EmbedBuilder()
+      .setColor('#FFD700')
+      .setTitle('⭐ Starboard configuré ✅')
+      .setDescription(`Quand un message reçoit **${threshold}** réaction(s) ${emoji}, il sera automatiquement posté dans ${channel}.`)
+      .addFields(
+        { name: '📢 Salon',  value: `${channel}`,              inline: true },
+        { name: '✨ Emoji',  value: emoji,                      inline: true },
+        { name: '🔢 Seuil', value: `${threshold} réaction(s)`, inline: true },
+      )
+      .setFooter({ text: '!starboard-setup sans arguments pour voir la config · !starboard-disable pour désactiver' })
+      .setTimestamp()] });
+  },
+
+  '!starboard-disable': async (message) => {
+    if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
+    starboardData.channelId = null;
+    saveStarboard();
+    await message.reply({ embeds: [new EmbedBuilder()
+      .setColor('#95A5A6')
+      .setTitle('⭐ Starboard désactivé')
+      .setDescription('Les messages ne seront plus automatiquement screenés.')] });
+  },
+
+
   '!clearrole': async (message) => {
     if (!isAdmin(message.author.id)) return message.reply('Permission refusée.');
     const TARGET_ROLE_ID = '1487674672865611806';
