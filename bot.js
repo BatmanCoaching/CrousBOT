@@ -3292,58 +3292,71 @@ client.on('messageReactionAdd', async (reaction, user) => {
   // ── STARBOARD ────────────────────────────────────────────────
   if (
     starboardData.channelId &&
-    emojiName === starboardData.emoji &&
     reaction.message.channel.id !== starboardData.channelId // évite les boucles
   ) {
     try {
-      // Compter les réactions de cet emoji sur ce message
-      const reactionObj = reaction.message.reactions.cache.find(r => r.emoji.name === starboardData.emoji);
-      const count = reactionObj ? reactionObj.count : 1;
+      // Fetch complet du message pour avoir toutes les réactions à jour
+      const fullMessage = await reaction.message.fetch();
+
+      // Chercher la réaction correspondant à l'emoji configuré
+      // Supporte les emojis unicode ET les emojis custom (<:nom:id>)
+      const sbEmoji     = starboardData.emoji;
+      const reactionObj = fullMessage.reactions.cache.find(r =>
+        r.emoji.name === sbEmoji ||
+        `<:${r.emoji.name}:${r.emoji.id}>` === sbEmoji ||
+        `<a:${r.emoji.name}:${r.emoji.id}>` === sbEmoji
+      );
+
+      if (!reactionObj) return; // cet événement ne concerne pas l'emoji starboard
+
+      // Fetch les utilisateurs pour avoir le count exact (évite les partials)
+      await reactionObj.users.fetch();
+      const count = reactionObj.count;
+
+      console.log(`[STARBOARD] ${count}/${starboardData.threshold} réactions sur ${msgId}`);
 
       if (count >= starboardData.threshold) {
-        // Déjà posté ?
+        const sbChannel = fullMessage.guild.channels.cache.get(starboardData.channelId);
+        if (!sbChannel) {
+          console.error('[STARBOARD] Channel introuvable :', starboardData.channelId);
+          return;
+        }
+
+        // Déjà posté → mise à jour du compteur uniquement
         if (starboardData.posted[msgId]) {
-          // Mettre à jour le compteur sur le message existant
-          const sbChannel = reaction.message.guild.channels.cache.get(starboardData.channelId);
-          if (sbChannel) {
-            const sbMsg = await sbChannel.messages.fetch(starboardData.posted[msgId]).catch(() => null);
-            if (sbMsg) {
-              await sbMsg.edit({ content: `${starboardData.emoji} **${count}** · <#${reaction.message.channel.id}>` }).catch(() => {});
-            }
+          const sbMsg = await sbChannel.messages.fetch(starboardData.posted[msgId]).catch(() => null);
+          if (sbMsg) {
+            await sbMsg.edit({ content: `${sbEmoji} **${count}** · <#${fullMessage.channel.id}>` }).catch(() => {});
           }
           return;
         }
 
-        const sbChannel = reaction.message.guild.channels.cache.get(starboardData.channelId);
-        if (!sbChannel) return;
-
-        const original    = reaction.message;
-        const author      = original.author;
+        const author      = fullMessage.author;
         const avatarUrl   = author.displayAvatarURL({ size: 256 });
-        const messageLink = `https://discord.com/channels/${original.guild.id}/${original.channel.id}/${original.id}`;
+        const messageLink = `https://discord.com/channels/${fullMessage.guild.id}/${fullMessage.channel.id}/${fullMessage.id}`;
 
         const sbEmbed = new EmbedBuilder()
           .setColor('#FFD700')
           .setAuthor({ name: author.tag, iconURL: avatarUrl, url: messageLink })
-          .setDescription(original.content || null)
-          .addFields({ name: '📌 Source', value: `[Aller au message](${messageLink}) · <#${original.channel.id}>`, inline: false })
-          .setFooter({ text: `ID : ${original.id}` })
-          .setTimestamp(original.createdAt);
+          .setDescription(fullMessage.content || null)
+          .addFields({ name: '📌 Source', value: `[Aller au message](${messageLink}) · <#${fullMessage.channel.id}>`, inline: false })
+          .setFooter({ text: `ID : ${fullMessage.id}` })
+          .setTimestamp(fullMessage.createdAt);
 
-        // Image jointe ou embed image
-        const imageAttachment = original.attachments.find(a => a.contentType?.startsWith('image/'));
-        if (imageAttachment) sbEmbed.setImage(imageAttachment.url);
-        else if (original.embeds[0]?.image) sbEmbed.setImage(original.embeds[0].image.url);
-        else if (original.embeds[0]?.thumbnail) sbEmbed.setImage(original.embeds[0].thumbnail.url);
+        // Image : pièce jointe, ou premier embed avec image
+        const imageAttachment = fullMessage.attachments.find(a => a.contentType?.startsWith('image/'));
+        if (imageAttachment)                     sbEmbed.setImage(imageAttachment.url);
+        else if (fullMessage.embeds[0]?.image)   sbEmbed.setImage(fullMessage.embeds[0].image.url);
+        else if (fullMessage.embeds[0]?.thumbnail) sbEmbed.setImage(fullMessage.embeds[0].thumbnail.url);
 
         const sbMsg = await sbChannel.send({
-          content: `${starboardData.emoji} **${count}** · <#${original.channel.id}>`,
+          content: `${sbEmoji} **${count}** · <#${fullMessage.channel.id}>`,
           embeds:  [sbEmbed],
         });
 
         starboardData.posted[msgId] = sbMsg.id;
         saveStarboard();
-        console.log(`[STARBOARD] Message ${msgId} posté dans #${sbChannel.name} (${count} réactions)`);
+        console.log(`[STARBOARD] ✅ Message ${msgId} posté dans #${sbChannel.name}`);
       }
     } catch (err) { console.error('[STARBOARD] Erreur :', err.message); }
   }
