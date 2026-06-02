@@ -656,6 +656,14 @@ const commands = {
             '`!stats [@user]` · Fiche complète d\'un membre',
             '`!clear <N>` 🔒 · Supprime N messages (max 100)',
             '`!say <#channel> | <titre> | <desc> | [couleur] | [image] | [footer]` 🔒',
+            '`!kick @user [raison]` 🔒 · Kick un membre',
+            '`!ban-list` 🔒 · Liste des membres bannis',
+            '`!leaderboard-warns` 🔒 · Top 10 des membres les plus warnés',
+          ].join('\n'), inline: false },
+        { name: '⭐ Starboard', value: [
+            '`!starboard-setup <#channel> | [emoji] | [seuil]` 🔒 · Configure le starboard',
+            '`!starboard-disable` 🔒 · Désactive le starboard',
+            '> Quand un message atteint le seuil de réactions, il est automatiquement posté dans le salon configuré',
           ].join('\n'), inline: false },
       )
       .setFooter({ text: '!aide2 → Rating ELO · !aide3 → Tournoi · !aide4 → Modération · !aide5 → Tickets, RR & Vérif' })
@@ -3279,6 +3287,65 @@ client.on('messageReactionAdd', async (reaction, user) => {
       try { await user.send('Tu as bien recu l\'acces au serveur ! Bienvenue !'); } catch {}
     } catch (err) { console.error('[REACTION ROLE] Erreur :', err.message); }
     return;
+  }
+
+  // ── STARBOARD ────────────────────────────────────────────────
+  if (
+    starboardData.channelId &&
+    emojiName === starboardData.emoji &&
+    reaction.message.channel.id !== starboardData.channelId // évite les boucles
+  ) {
+    try {
+      // Compter les réactions de cet emoji sur ce message
+      const reactionObj = reaction.message.reactions.cache.find(r => r.emoji.name === starboardData.emoji);
+      const count = reactionObj ? reactionObj.count : 1;
+
+      if (count >= starboardData.threshold) {
+        // Déjà posté ?
+        if (starboardData.posted[msgId]) {
+          // Mettre à jour le compteur sur le message existant
+          const sbChannel = reaction.message.guild.channels.cache.get(starboardData.channelId);
+          if (sbChannel) {
+            const sbMsg = await sbChannel.messages.fetch(starboardData.posted[msgId]).catch(() => null);
+            if (sbMsg) {
+              await sbMsg.edit({ content: `${starboardData.emoji} **${count}** · <#${reaction.message.channel.id}>` }).catch(() => {});
+            }
+          }
+          return;
+        }
+
+        const sbChannel = reaction.message.guild.channels.cache.get(starboardData.channelId);
+        if (!sbChannel) return;
+
+        const original    = reaction.message;
+        const author      = original.author;
+        const avatarUrl   = author.displayAvatarURL({ size: 256 });
+        const messageLink = `https://discord.com/channels/${original.guild.id}/${original.channel.id}/${original.id}`;
+
+        const sbEmbed = new EmbedBuilder()
+          .setColor('#FFD700')
+          .setAuthor({ name: author.tag, iconURL: avatarUrl, url: messageLink })
+          .setDescription(original.content || null)
+          .addFields({ name: '📌 Source', value: `[Aller au message](${messageLink}) · <#${original.channel.id}>`, inline: false })
+          .setFooter({ text: `ID : ${original.id}` })
+          .setTimestamp(original.createdAt);
+
+        // Image jointe ou embed image
+        const imageAttachment = original.attachments.find(a => a.contentType?.startsWith('image/'));
+        if (imageAttachment) sbEmbed.setImage(imageAttachment.url);
+        else if (original.embeds[0]?.image) sbEmbed.setImage(original.embeds[0].image.url);
+        else if (original.embeds[0]?.thumbnail) sbEmbed.setImage(original.embeds[0].thumbnail.url);
+
+        const sbMsg = await sbChannel.send({
+          content: `${starboardData.emoji} **${count}** · <#${original.channel.id}>`,
+          embeds:  [sbEmbed],
+        });
+
+        starboardData.posted[msgId] = sbMsg.id;
+        saveStarboard();
+        console.log(`[STARBOARD] Message ${msgId} posté dans #${sbChannel.name} (${count} réactions)`);
+      }
+    } catch (err) { console.error('[STARBOARD] Erreur :', err.message); }
   }
 
   // ── Multi-RR classique ──
